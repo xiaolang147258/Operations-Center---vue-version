@@ -19,6 +19,9 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+
+
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -36,6 +39,13 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
 
+import Vuex from 'vuex'
+import stores from './vuex/store'
+Vue.use(Vuex)
+
+import axios from '../node_modules/axios'
+Vue.prototype.$axios = axios;
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -47,5 +57,6 @@ new Vue({
   el: '#app',
   router,
   store,
+	axios,
   render: h => h(App)
 })

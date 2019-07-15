@@ -1,0 +1,73 @@
+<template>
+   <div  v-loading="loading" style="margin:20px">
+	<el-tabs @tab-click='chilld_msg' type="border-card">
+      <el-tab-pane :label='message_um'><indexMessage  :fatherMethod="git_top_num" ref="mychild_mssage"></indexMessage></el-tab-pane>
+      <el-tab-pane :label='auit_um'><indexAudit ref="mychild_Audit"></indexAudit></el-tab-pane>
+    </el-tabs>
+   </div>
+</template>
+
+<script>
+	import index_audit from './index_audit.vue';
+	import index_message from './index_message.vue';
+	import store from "../../vuex/store.js";
+	export default {
+    data(){
+      return {
+         message_um:'待查看消息',
+		 auit_um:'待审核内容',
+		 loading:false,
+      };
+    },
+	components:{//声明==》子组件的名字
+		'indexAudit':index_audit,
+		'indexMessage':index_message
+	},
+    methods:{
+	 chilld_msg(i){
+		console.log(i.index)
+		if(i.index==0){
+			console.log(11)
+			this.$refs.mychild_mssage.git_act(1);
+		}else if(i.index==1){
+			console.log(22)
+			this.$refs.mychild_Audit.git_act(1);
+		}
+	 },
+		
+     git_top_num(){//获取顶部消息审核数据
+		this.$axios({method:'get',url:store.state.url_data+'/api/works',headers:{'Authorization':'Bearer '+localStorage.token}}
+		   ).then(res=>{
+              console.log(res.data,'顶部数据');
+             if(res.data.code==200){
+				this.message_um = '待查看消息'+'('+res.data.message.message_count+')';
+				this.auit_um = '待审核内容'+'('+res.data.message.audit_count+')';
+				store.state.message_box = res.data.message.message;
+				store.state.audit_box = res.data.message.audits;
+				this.loading = false;
+			 }else{this.loading = false;}
+           }).catch(error=> {
+              this.loading = false;
+           });
+		},
+		
+    },
+	
+	mounted(){
+	},
+	created(){
+		localStorage.token = 'CDC7YMu8IzVPZhkjNcsYdJurU37Hmttz8vkl';//写死token
+		localStorage.cs_id = 440100000000;//写死城市id
+		
+		this.loading = true;
+		this.git_top_num();
+	  window.setTimeout(()=>{
+		this.$refs.mychild_mssage.git_act(1);
+	  },200)
+		
+	}
+  };
+</script>
+
+<style>
+</style>
