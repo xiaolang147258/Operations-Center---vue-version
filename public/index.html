@@ -7,9 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= webpackConfig.name %></title>
+	<!--  -->
   </head>
+	
   <body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+	 <script src="<%= BASE_URL %>excel/js-xlsx/xlsx.js"></script>
+	 <script src="<%= BASE_URL %>excel/js-xlsx/m_xlsx.js"></script>
+	 <script type="text/javascript" src="<%= BASE_URL %>wangEditor-3.1.1/release/wangEditor.min.js"></script>
+	 <script type="text/javascript">
+		 var xlsxworker ='<%= BASE_URL %>excel/js-xlsx/xlsxworker.js';
+		 
+	 </script>
 </html>

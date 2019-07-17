@@ -22,7 +22,8 @@ const state = {
    //进入审核详情判断是审核还是详情
    audit_val:'',//审核||详情
    
-   
+   //课程进入添加||编辑页传递的id
+   course_id:'',
    
 };
 var vuexStore = new Vuex.Store({

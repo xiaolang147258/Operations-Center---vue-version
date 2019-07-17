@@ -1,0 +1,535 @@
+<template>
+	<!-- 教师编辑添加 -->
+	<div style="width:100%;">
+	  <el-card v-loading="loading" class="box-card"  style="padding:0;margin:20px;padding-bottom: 20px;">
+		  
+	    <div class="box_tall"><el-input class='tab_c' placeholder="请输入内容" v-model="input[0]" clearable></el-input><p>*教师名称:</p></div>
+			 
+		<div class="box_tall">
+		  <div class='tab_c'>
+			  <el-select style='width:115px;'  v-model="cs_val2" placeholder="请选择城市">
+			     <el-option v-for="(item,index) in cs_box2" :key="item.city_id" :label="item.city_name" :value="item.city_id"></el-option>
+			  </el-select>
+			  <el-select style='width:115px;'  @change='qy_click2' v-model="qy_val2"  placeholder="请选择区域">
+			     <el-option v-for="(item,index) in qy_box2" :key="item.region_id" :label="item.region_name" :value="item"></el-option>
+			  </el-select>
+			  <el-select style='width:115px;'  @change='jd_click2' v-model="jd_val2"  placeholder="请选择街道">
+			     <el-option v-for="(item,index) in jd_box2" :key="item.street_id" :label="item.street_name" :value="item"></el-option>
+			  </el-select>
+		  </div>
+		  <p>*所属地区:</p>
+		</div> 
+		
+		 <div class="box_tall">
+			 <el-select class='tab_c' @change='xl_click' v-model="xl_val" placeholder="请选择">
+			     <el-option v-for='(i,index) in xl_box'  :label="i.name" :value="i.id"></el-option>
+			 </el-select>
+		    <p>*学历:</p>
+		 </div>
+		
+		<div class="box_tall">
+					 <el-select class='tab_c' v-model="sex_val" placeholder="请选择">
+					     <el-option  :label="'男'" :value="'男'"></el-option>
+						 <el-option  :label="'女'" :value="'女'"></el-option>
+					 </el-select>
+		   <p>*性别:</p>
+		</div>
+		
+		<div class="box_tall"><el-input type='Number' class='tab_c' placeholder="请输入11位数手机号" v-model="input[1]" clearable></el-input><p>*手机号码:</p></div>
+		
+		<div class="box_tall">
+		  <div class='tab_c'><el-date-picker style='width:100%;' v-model="value1" type="date" placeholder="选择生日"> </el-date-picker></div><p>*生日:</p>
+		</div> 
+		
+<!-- 教师来源 ===================================================================================================================================================-->	
+		<div class="box_tall">
+		  <div class='tab_c'>
+			  
+			  <el-select style='width:115px;' @change='lx_cl' v-model="lx_val" placeholder="请选择">
+			     <el-option  :label="'机构'" :value="'机构'"></el-option>
+			     <el-option  :label="'学校'" :value="'学校'"></el-option>
+			  </el-select>
+			  <el-select class='tab_c' style='width:235px;' @change='dw_cl' v-model="dw_val" placeholder="请选择">
+			      <el-option v-for='(i,index) in dw_box'  :label="i.name" :value="i.institution_id"></el-option>
+			  </el-select>
+			  
+		  </div>
+		  <p>*教师来源:</p>
+		</div> 
+
+
+        <div v-show='dada_x_j==false' class="box_tall" style="width: 1000px;padding-left:165px;">
+			<p style="float: left;">*银行卡号:</p>
+		    <el-input @blur='bank_id_show' style='float: left;' type='Number' class='tab_c' placeholder="请输入银行卡号" v-model="input[2]" clearable></el-input>
+		    <a v-show="banke_se" style="float:flet;margin-left:10px;line-height:40px;">{{banke_se}}+'-'+{{banke_cs}}+'-'+{{banke_name}}</a>
+		</div>
+        
+		<div v-show='dada_x_j==false' class="box_tall">
+			<div class='tab_c' style="padding-top:10px;padding-left:5px;">
+				 <el-radio v-model="radio" label="1">身份证</el-radio>
+				 <el-radio v-model="radio" label="2">护照</el-radio>
+				 <el-radio v-model="radio" label="3">港澳台通行证/回乡证</el-radio>
+			</div> <p>*证件类型:</p>
+		</div>
+        
+        <div class="box_tall">
+        	<el-input type='Number' class='tab_c' placeholder="请输入证件号码" v-model="input[3]" clearable></el-input>
+            <p>*证件号码:</p>
+        </div>
+		
+		<div class="box_tall" style="height:auto;float:left;width:850px;padding-right:5px;">
+			<div class='tab_c' style="height:auto;width:600px;">
+				 <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+				  <el-checkbox style='margin:0px 10px 10px 0px;' v-for="city in cities" :label="city.id" :key="city.id" border>{{city.name}}</el-checkbox>
+				</el-checkbox-group>
+			</div><p>*授课门类:</p>
+		</div>
+
+<!-- 机构的老师需要上传的图片 -->		
+      <div v-if="dada_x_j" class="img_f_box" style="padding-left:135px;">
+		  
+		 <div class="box_tall" style="height:150px;padding:0;margin:0;width:300px;float:left;">
+			 <p style="float:left;">*教师资格证书:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+			  <el-upload
+                 :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s1' :limit='1'
+				 :on-success='on_success_ok1' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove1">
+                 <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+              </el-upload>
+			 </div>
+		 </div>
+		 
+		 <div class="box_tall" style="height:150px;padding:0;margin:0;width:320px;float:left;">
+		 			 <p style="float:left;">*合同盖章页（尾页）:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+		 			  <el-upload
+		                 :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s2' :limit='1'
+		 				 :on-success='on_success_ok2' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove2">
+		                 <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		               </el-upload>
+		 	 </div>
+		 </div>
+		
+		  <div class="box_tall" style="height:150px;padding:0;margin:0;width:300px;float:left;margin-left:40px;">
+		 			 <p style="float:left;">*职业照:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+		 			  <el-upload
+		                 :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s6' :limit='1'
+		 				 :on-success='on_success_ok6' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove6">
+		                <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		              </el-upload>
+		 	</div>
+		 </div>
+	  </div>
+
+<!-- 学校的老师需要上传的图片 -->		
+	  <div v-else class="img_f_box" style="padding-left:120px;">
+		 <div class="box_tall" style="height:150px;padding:0;margin:0;width:300px;float:left;">
+		 			 <p style="float:left;">*身份证（正面）:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+		 			  <el-upload
+		         :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s7' :limit='1'
+		 				 :on-success='on_success_ok7' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove7">
+		         <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		      </el-upload>
+		 			 </div>
+		 </div>
+		 
+		 <div class="box_tall" style="height:150px;padding:0;margin:0;width:300px;float:left;">
+		 			 <p style="float:left;">*身份证（反面）:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+		 			  <el-upload
+		                 :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s8' :limit='1'
+		 				 :on-success='on_success_ok8' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove8">
+		                 <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		               </el-upload>
+		 	 </div>
+		 </div>
+		 		
+		  <div class="box_tall" style="height:150px;padding:0;margin:0;width:300px;float:left;margin-left:20px;">
+		 			 <p style="float:left;">*职业照:</p>
+		 	 <div class='tab_c' style="height:150px;float:left;width:150px;overflow:hidden;">
+		 			  <el-upload
+		                 :action="url_img" :headers=headers_s name='images' :file-list='fist_box.s6' :limit='1'
+		 				 :on-success='on_success_ok6' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove6">
+		                <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		              </el-upload>
+		 	</div>
+		 </div> 
+	  </div>	
+<!-- 其他证件照 -->	  
+	  <div class="img_f_box" style="padding-left:145px;">
+		  <div class='tab_c' style="height:150px;float:left;width:100%;">
+			      <p style="float:left;font-weight:600;margin-right:10px;">*其他职业照:</p>
+		  		  <el-upload
+		              :action="url_img" :headers=headers_s name='images'  :file-list='fist_box.s3' :limit='5' :on-exceed='exceed' :multiple='true'
+		  			  :on-success='on_success_ok3' :on-error='on_error_on' list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove3">
+		              <el-tooltip class="item" effect="dark" content="建议上传4x4比例且清晰的图片" placement="right-start"><i style="width: 100%;height:100%;outline:none;" class="el-icon-plus"></i></el-tooltip>
+		            </el-upload>
+		  </div>
+	  </div>
+	  
+<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->	  
+	  <div style="width: 100%;height:40px;float: left;margin-top: 30px;">
+	  		    <div style="width: 210px;height: 100%;margin: 0 auto;">
+	  				<el-button @click='quxioa' style='float:left;' type="info">返回列表</el-button>
+	  				<el-button @click='git_active' style='float:right;' type="primary">确认提交</el-button>
+	  			</div>
+	  </div>
+<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->
+	  
+      </el-card>
+ <!-- 全屏预览图片 -->
+  <el-dialog :visible.sync="dialogVisible">
+    <img width="100%" :src="dialogImageUrl" alt="">
+ </el-dialog>
+</div>
+</template>
+
+
+<script>
+	 import store from "../../../vuex/store.js";
+	 
+     export default {
+		 computed:{
+			 url_img(){return store.state.url_data+'/api/uploads'},
+			 headers_s(){return {'Authorization':'Bearer '+localStorage.token}},
+		 },
+		 data(){
+			 return{
+				 
+				 banke_se:'',//开户行省
+				 banke_cs:'',//开户行市
+				 banke_name:'',//开户行名字
+				 
+				 
+				fist_box:{s1:[],s2:[],s3:[],s6:[],s7:[],s8:[]},//s3是其他证件照
+				img_url_box:{s1:'',s2:'',s3:[],s6:'',s7:'',s8:''},//s3是其他证件照
+				
+				dada_x_j:true,//学校为false--机构为true
+				 
+				checkedCities:[],//选中的标签数组
+				cities:[],
+				 
+				dialogImageUrl:'',
+				dialogVisible:false,
+				loading:false, 
+				
+				input:[],
+	 // 城市区域街道2
+				cs_box2:[],
+				qy_box2:[],
+				jd_box2:[],
+				
+				cs_val2:'',
+				qy_val2:'',
+				jd_val2:'',
+				
+				cs_id2:'',
+				qy_id2:'',
+				jd_id2:'',
+				
+				//学历
+				xl_val:'',
+				xl_box:[],
+				xl_id:'',
+				
+				sex_val:'',//性别
+				value1: '',//生日为==时间戳格式==传递时需要转换
+				
+				lx_val:'机构',//类型 学校||机构
+				dw_val:'',
+				dw_box:[],
+				dw_id:'',//教师来源id
+				
+				radio:'1',//证件类型选择的参数
+				
+			 }
+		 },
+	methods:{
+		
+		bank_id_show(){//银行卡效验
+		    console.log(this.input[2])
+		    if(this.input[2]){}else{this.$message.error('银行卡号不能为空');return false;}
+		    this.$axios({method:'get',url:store.state.url_data+'/api/cards?card='+this.input[2],
+			   headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
+				 console.log(res.data.data,'效验')
+			     if(res.data.code==200){
+					  
+					  
+					}
+			 }).catch(error=> {});
+		},
+		
+//提交数据
+	git_active(){
+		
+		let postData = {
+			
+			 name:$('#name_s').val(),//教师姓名
+			 source_type_id:source_type_id_s,//教师来源类型id 1：机构，2学校
+			 source_id:source_id_s,//来源的组织id
+			 role_type_id:1,//教师的角色id  目前只有1，
+			 gender:$('#sex').find("option:selected").html()=='男'?1:2,//性别：1：男， 2： 女，默认-1
+			 phone:$('#iphone_s').val(),//教师手机号码
+			 birthday:$('#nian').find("option:selected").attr('index')+'/'+$('#yue').find("option:selected").attr('index')+'/'+$('#ri').find("option:selected").attr('index'),
+			 origin_country:'中国',//国籍
+			 origin_province:'440',//省份id
+			 origin_city:sessionStorage.cs_id,//城市id
+			 origin_region:qy_id1,//区域id
+			 origin_street:jd_id1,//街道id
+			 idcard_type:zheng_id,//身份证件类型：1：身份证、2：护照、3：港澳通行证/回乡证
+			 idcard_number:$('#exid_s').val(),//证件号码
+			 edu_degree_type_id:xue_li_id,//学历类型编号  1研究生学历，2，本科学历，3专升本学历，4专科学理
+			 bank_account:$('#yin_kid_s').val(),//银行卡号
+			 attachment_1:attachments['1'],//教师资格证
+			 attachment_2:attachments['2'],//劳动合同
+			 attachment_3:attachments['3'],//其他资格证书
+			 attachment_6:attachments['6'],//职业照
+			 attachment_7:attachments['7'],//身份证正面
+			 attachment_8:attachments['8'],//身份证反面
+			 
+			 category:ke_id_box,//授课门类
+			 bank_province:$('#yin_sheng').find("option:selected").html(),//银行卡开户省份
+			 bank_city:$('#yin_shi').find("option:selected").html(),////银行卡开户市
+			 bank_name:$('#aer').html(),//开户银行
+		};
+		let type = sessionStorage.teacher_id==''?'post':'put';
+		this.$axios({method:type,url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,params:postData,
+		     headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
+		     console.log(res.data,'添加结果')
+		     if(res.data.code==200){
+				 
+		    }}).catch(error=> {});
+	},
+//返回	
+	quxioa(){this.$router.go(-1);},//返回上一页
+     
+//其他职业证书  	  
+	  handleRemove3(file, fileList) {//删除
+	    this.img_url_box.s3 = [];
+	    for(var i=0;i<fileList.length;i++){this.img_url_box.s3.push(fileList[i].response.data.image)}
+		console.log(this.img_url_box);
+      },
+	  on_success_ok3(response, file, fileList){//上传成功
+	      console.log(fileList);
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s3 = [];
+		  for(var i=0;i<fileList.length;i++){this.img_url_box.s3.push(fileList[i].response.data.image)}
+		  console.log(this.img_url_box);
+	  },
+	  exceed(){this.$message.error('其他证件照不能超过5张')},
+//教师资格证  	  
+	  handleRemove1(file, fileList) {//删除
+		this.img_url_box.s1 = ''; console.log(this.img_url_box)
+      },
+	  on_success_ok1(response, file, fileList){//上传成功
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s1 = response.data.image;
+		  console.log(this.img_url_box)
+	  },
+//合同盖章页（尾页）  	  
+	  handleRemove2(file, fileList) {//删除
+		this.img_url_box.s2 = ''; console.log(this.img_url_box)
+      },
+	  on_success_ok2(response, file, fileList){//上传成功
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s2 = response.data.image;
+		  console.log(this.img_url_box)
+	  },	  
+//职业照  	  
+	  handleRemove6(file, fileList) {//删除
+		this.img_url_box.s6 = ''; console.log(this.img_url_box)
+      },
+	  on_success_ok6(response, file, fileList){//上传成功
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s6 = response.data.image;
+		  console.log(this.img_url_box)
+	  },	  
+
+//身份证（正面）  	  
+	  handleRemove7(file, fileList) {//删除
+		this.img_url_box.s7 = ''; console.log(this.img_url_box)
+      },
+	  on_success_ok7(response, file, fileList){//上传成功
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s7 = response.data.image;
+		  console.log(this.img_url_box)
+	  },
+//身份证（反面）  	  
+	  handleRemove8(file, fileList) {//删除
+		this.img_url_box.s8 = ''; console.log(this.img_url_box)
+      },
+	  on_success_ok8(response, file, fileList){//上传成功
+		  this.$message({message: '上传成功',type: 'success' });
+		  this.img_url_box.s8 = response.data.image;
+		  console.log(this.img_url_box)
+	  },	  
+	  
+	  
+      on_error_on(err, file, fileList){//上传失败
+		  this.$message.error('上传失败');console.log(err)
+	  },
+      handlePictureCardPreview(file) {//查看大图
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+	  
+//授课门类函数		
+      handleCheckedCitiesChange(value) {//任意一项被点击
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.cities.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+		console.log(this.checkedCities)
+      },
+	  git_check(){//获取授课门类数据
+		this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',
+		   headers:{'Authorization':'Bearer '+localStorage.token}}
+		   ).then(res=>{
+			 // console.log(res.data.data,'授课门类')
+		     if(res.data.code==200){
+					this.cities = res.data.data;
+				}
+		   }).catch(error=> {});
+	  },		
+		
+//获取来源
+         lx_cl(){//教师类型被点击 机构||学校
+		    
+			this.dw_val = '';this.dw_id = '';
+			let url = this.lx_val=='机构'?'institutions':'schools';
+			this.dada_x_j = this.lx_val=='机构'?true:false;
+			
+			this.img_url_box.s1='';this.img_url_box.s2='';this.img_url_box.s6='';
+			this.img_url_box.s7='';this.img_url_box.s8='';
+			
+			this.fist_box.s1=[];this.fist_box.s2=[];this.fist_box.s6=[];
+			this.fist_box.s7=[];this.fist_box.s8=[];
+			
+			this.$axios({method:'get',url:store.state.url_data+'/api/'+url+'?type=options&audit_status=2',
+			headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+			     if(res.data.code==200){
+					 this.dw_box = res.data.data;
+				 }}).catch(error=> {});
+		},
+		dw_cl(i){
+			this.dw_id = i;
+			console.log(this.dw_id);
+		},
+		
+//学历
+        git_xl_act(){//获取学历数据
+			this.$axios({method:'get',url:store.state.url_data+'/api/teacherEduDegrees',headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+			     if(res.data.code==200){
+					 this.xl_box = res.data.data;
+				 }}).catch(error=> {});
+		},
+        xl_click(i){//学历被点击
+		  this.xl_id = i;
+		  console.log(this.xl_id,'学历id')
+		},
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				 
+//城市数据			 
+        cs_fn2(){
+		   this.$axios({method:'get',url:store.state.url_data+'/api/regions',params:{type:'city',id:440},headers:{'Authorization':'Bearer '+localStorage.token}}
+		      ).then(res=>{
+		        if(res.data.code==200){
+		   		  for (var i = 0; i < res.data.data.length;i++){
+		   		  		if(localStorage.cs_id==res.data.data[i].city_id){
+		   		  			this.cs_box2 = [];this.cs_box2.push(res.data.data[i]);this.cs_val2 = res.data.data[i].city_name;
+		   		  		}
+		   		  }; this.qy_fn2();//获取区域数据
+				    
+				     
+		   		}}).catch(error=> {});
+		},
+		
+//获取区域数据
+		qy_fn2(){
+		   this.$axios({method:'get',url:store.state.url_data+'/api/regions',params:{type:'region',id:localStorage.cs_id},headers:{'Authorization':'Bearer '+localStorage.token}}
+		      ).then(res=>{
+		        if(res.data.code==200){
+		   		    this.qy_box2 = res.data.data;
+					this.qy_val2 = this.qy_box2[0].region_name;
+					console.log(this.qy_val2)
+					this.qy_id2 = this.qy_box[0].region_id;
+					// this.jd_fn2();
+		   		}
+		      }).catch(error=> {});
+		},
+		
+//当区域选项被点击
+		qy_click2(i){
+			this.qy_val2 = i.region_name;
+			this.qy_id2 = i.region_id;this.jd_val2 = '';this.jd_box2 = [];this.jd_id2 = '';
+			this.jd_fn2();//获取街道数据
+		    console.log(this.qy_id2,this.qy_val2);
+		},
+		
+//获取街道数据
+		jd_fn2(){
+			
+		   this.$axios({method:'get',url:store.state.url_data+'/api/regions',params:{type:'street',id:this.qy_id2},headers:{'Authorization':'Bearer '+localStorage.token}}
+		     ).then(res=>{
+				 console.log(res.data,'街道数据222')
+		       if(res.data.code==200){
+		  		    this.jd_box2 = res.data.data;
+					this.jd_id2 = this.jd_box2[0].street_id;
+					this.jd_val2 = this.jd_box2[0].street_name
+		  		}
+		     }).catch(error=> {});
+		},
+		
+//当街道选项被点击
+		jd_click2(i){
+			this.jd_id2 = i.street_id;this.jd_val2 = i.street_name;
+			 console.log(this.jd_id2,this.jd_val2);
+		},
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+		
+		},
+		 mounted(){
+			this.cs_fn2();
+			this.git_xl_act();
+			this.lx_cl();
+			this.git_check();
+			
+			 
+		},
+		 
+		 
+	 };
+</script>
+<style scoped="scoped">
+	.img_f_box{
+		width: 100%;
+		height: 150px;
+		margin: 20px 0;
+		float: left;
+		/* background: red; */
+		padding-left:160px;
+	}
+	.tab_c{
+		width:355px;
+		height: 40px;
+		float: right;
+		}
+	.box_tall p{
+		font-size: 15px;
+		font-weight: 600;
+		float: right;
+		margin: 0;
+		line-height: 40px;
+		margin-right: 10px;
+	}
+	.box_tall{
+		width: 600px;
+		height: 40px;
+		padding-left: 70px;
+		margin: 20px 0;
+	}
+	
+</style>

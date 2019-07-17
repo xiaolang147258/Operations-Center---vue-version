@@ -23,7 +23,7 @@
 			   <el-option v-for="(item,index) in jd_box" :key="index" :label="item.street_name" :value="item.street_id"></el-option>
 			</el-select>
 			
-			<el-button @click='create_act("","添加机构")' style='float: right;margin-right:20px;' type="primary" >添加机构</el-button>
+			<el-button @click='create_act("","添加机构")' style='float: right;margin-right:35px;' type="primary" >添加机构</el-button>
 			<!-- <div class='inp_a'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button> -->
 		</div>
@@ -44,7 +44,7 @@
      </el-table>
   <div style="margin-top:20px;">
 <!-- 分页插件 :current-page="currentPage4" -->
-	<div style="width: 560px;margin: auto;">
+	<div style="float:right;margin-right:10px;">
        <el-pagination background @size-change="handleSizeChange"
        @current-change="handleCurrentChange"
        :page-sizes="ye_s"
@@ -174,7 +174,8 @@
 			  this.ider = '';
 			  this.id_f_t = false;
 			  this.cre_ate_show = true;
-			   
+			  this.input = [];
+			  
 			}else if(i=='编辑机构'){
 			  this.ider = '/'+id;
 			  this.id_f_t = true; 
@@ -254,7 +255,7 @@
                        this.input = [];
 					   this.git_act(this.currentPage4);
 					}else if(res.data.code==407){
-					   let box = res.data.data;let vals = '';
+					    let box = res.data.data;let vals = '';
 						for (var index in box){vals=box[index].join(' ')}  
 						this.$alert(vals, '内容错误!', { confirmButtonText: '确定',callback: action => {}})}
 				}).catch(error=> {})

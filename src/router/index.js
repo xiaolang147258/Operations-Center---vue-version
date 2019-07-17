@@ -177,6 +177,34 @@ export const constantRoutes = [
 	  ]
 	},
 	
+	//课程添加||编辑页
+	{
+		hidden: true,//当设置 true 的时候该路由不会再侧边栏出现
+	  path: '/add_course',
+	  component: Layout,
+	  children: [
+	    {
+	      path: '/add_course',
+	      component: () => import('@/vif_box/information_Center004/Course_management_002/add_course'),
+	      name:'add_course',
+	      meta: { title: '课程添加/编辑',affix:true}
+	    }
+	  ]
+	},
+	//教师 添加||编辑页
+	{
+		hidden: true,//当设置 true 的时候该路由不会再侧边栏出现
+	  path: '/003_add_teacher',
+	  component: Layout,
+	  children: [
+	    {
+	      path: '/003_add_teacher',
+	      component: () => import('@/vif_box/information_Center004/Teacher_management_003/003_add_teacher'),
+	      name:'003_add_teacher',
+	      meta: { title: '教师添加/编辑',affix:true}
+	    }
+	  ]
+	},
 	
 	
 ]

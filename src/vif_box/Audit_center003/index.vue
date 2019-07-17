@@ -45,7 +45,7 @@
      </el-table>
   <div style="margin-top:20px;">
 <!-- 分页插件 :current-page="currentPage4" -->
-	<div style="width: 560px;margin: auto;">
+	<div style="float:right;margin-right:10px;">
        <el-pagination background @size-change="handleSizeChange"
        @current-change="handleCurrentChange"
        
