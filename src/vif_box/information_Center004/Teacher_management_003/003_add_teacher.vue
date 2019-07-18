@@ -57,23 +57,22 @@
 		  <p>*教师来源:</p>
 		</div> 
 
-
         <div v-show='dada_x_j==false' class="box_tall" style="width: 1000px;padding-left:165px;">
 			<p style="float: left;">*银行卡号:</p>
 		    <el-input @blur='bank_id_show' style='float: left;' type='Number' class='tab_c' placeholder="请输入银行卡号" v-model="input[2]" clearable></el-input>
-		    <a v-show="banke_se" style="float:flet;margin-left:10px;line-height:40px;">{{banke_se}}+'-'+{{banke_cs}}+'-'+{{banke_name}}</a>
+		    <a v-show="banke_se" style="float:flet;margin-left:10px;line-height:40px;">{{banke_se}}-{{banke_cs}}-{{banke_name}}</a>
 		</div>
         
 		<div v-show='dada_x_j==false' class="box_tall">
 			<div class='tab_c' style="padding-top:10px;padding-left:5px;">
-				 <el-radio v-model="radio" label="1">身份证</el-radio>
-				 <el-radio v-model="radio" label="2">护照</el-radio>
-				 <el-radio v-model="radio" label="3">港澳台通行证/回乡证</el-radio>
+				 <el-radio v-model="radios" label="1">身份证</el-radio>
+				 <el-radio v-model="radios" label="2">护照</el-radio>
+				 <el-radio v-model="radios" label="3">港澳台通行证/回乡证</el-radio>
 			</div> <p>*证件类型:</p>
 		</div>
         
         <div class="box_tall">
-        	<el-input type='Number' class='tab_c' placeholder="请输入证件号码" v-model="input[3]" clearable></el-input>
+        	<el-input type='Number' @blur='idcard_id_show' class='tab_c' placeholder="请输入证件号码" v-model="input[3]" clearable></el-input>
             <p>*证件号码:</p>
         </div>
 		
@@ -186,7 +185,6 @@
 </div>
 </template>
 
-
 <script>
 	 import store from "../../../vuex/store.js";
 	 
@@ -194,14 +192,14 @@
 		 computed:{
 			 url_img(){return store.state.url_data+'/api/uploads'},
 			 headers_s(){return {'Authorization':'Bearer '+localStorage.token}},
+			 
+			 radios(){return this.radio},
 		 },
 		 data(){
 			 return{
-				 
 				 banke_se:'',//开户行省
 				 banke_cs:'',//开户行市
 				 banke_name:'',//开户行名字
-				 
 				 
 				fist_box:{s1:[],s2:[],s3:[],s6:[],s7:[],s8:[]},//s3是其他证件照
 				img_url_box:{s1:'',s2:'',s3:[],s6:'',s7:'',s8:''},//s3是其他证件照
@@ -235,6 +233,7 @@
 				xl_id:'',
 				
 				sex_val:'',//性别
+				
 				value1: '',//生日为==时间戳格式==传递时需要转换
 				
 				lx_val:'机构',//类型 学校||机构
@@ -242,8 +241,10 @@
 				dw_box:[],
 				dw_id:'',//教师来源id
 				
-				radio:'1',//证件类型选择的参数
+				radio:1,//证件类型选择的参数
 				
+				bank_show:false,//银行卡效验开关
+				idcard_show:false,//身份证效验开关
 			 }
 		 },
 	methods:{
@@ -253,54 +254,189 @@
 		    if(this.input[2]){}else{this.$message.error('银行卡号不能为空');return false;}
 		    this.$axios({method:'get',url:store.state.url_data+'/api/cards?card='+this.input[2],
 			   headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
-				 console.log(res.data.data,'效验')
+				 console.log(res.data.data,'银行效验')
 			     if(res.data.code==200){
-					  
-					  
-					}
-			 }).catch(error=> {});
+					  this.bank_show = true;
+					  this.banke_se=res.data.data.province,//开户行省
+					  this.banke_cs=res.data.data.city,//开户行市
+					  this.banke_name=res.data.data.bankName,//开户行名字
+					  this.$notify({title:'成功',message:'银行卡效验成功',type:'success'});
+				 }else{
+					 this.banke_se='',//开户行省
+					 this.banke_cs='',//开户行市
+					 this.banke_name='',//开户行名字
+					 this.bank_show = false;
+					 let box = res.data.data;let vals = '';
+					 for (var index in box){vals=box[index].join(' ')}  
+					 this.$notify({title:'失败',message:vals+'请重新输入',type:'warning'});
+				 }
+			 }).catch(error=> {
+				   this.banke_se='',//开户行省
+				   this.banke_cs='',//开户行市
+				   this.banke_name='',//开户行名字
+				   this.$notify.error({title:'错误',message:'银行卡效验失败，请重新输入！'}); this.bank_show = false;
+				 });
+		},
+		idcard_id_show(){//身份证效验
+		    console.log(this.input[3])
+			if(this.radio!='1'){this.idcard_show = true;return false}
+			if(this.input[0]){}else{this.$message.error('教师姓名不能为空');return false;}
+		    if(this.input[3]){}else{this.$message.error('身份证号码能为空');return false;}
+			
+		    this.$axios({method:'get',url:store.state.url_data+'/api/ocridNum?idCard='+this.input[3]+'&name='+this.input[0],
+			   headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
+				 console.log(res.data.data,'证件效验');
+			     if(res.data.code==200){
+					  this.idcard_show = true;
+					  this.$notify({title:'成功',message:'身份证效验成功',type:'success'});
+				}else{
+					this.idcard_show = false;
+					let box = res.data.data;let vals = '';
+					for (var index in box){vals=box[index].join(' ')}
+					this.$notify({title:'失败',message:vals+'请重新输入',type:'warning'});
+				}
+			 }).catch(error=> {this.$notify.error({title:'错误',message:'身份证效验失败，请重新输入！'});this.idcard_show = false;});
 		},
 		
+    git_put_act(){//判断是否为编辑状态
+		if(sessionStorage.teacher_id==''){//增加状态
+		    
+		}else{//编辑状态
+		
+		  this.bank_show=true//银行卡效验开关
+		  this.idcard_show=true//身份证效验开关
+		  this.$axios({method:'get',url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,
+		     headers:{'Authorization':'Bearer '+localStorage.token}}
+		     ).then(res=>{
+		  	   console.log(res.data.data,'编辑详情')
+		       if(res.data.code==200){
+		  		 var teacher = res.data.data.teacher;//教师详细信息
+		  		 var category = res.data.data.category;
+		  		 var attachment = res.data.data.attachment;
+				 
+				 this.input[0] = teacher.name;
+				 this.qy_val2=teacher.region_name;
+				 this.jd_val2=teacher.street_name;
+				 this.qy_id2=teacher.origin_region;
+				 this.jd_id2=teacher.origin_street;
+				 
+				 this.xl_id = teacher.edu_degree_type_id;
+				 this.xl_val = this.xl_id==1?'研究生学历':(this.xl_id==2?'本科学历':(this.xl_id==3?'专升本学历':'专科学理'));
+				 this.sex_val = teacher.gender==1?'男':'女';
+				 this.input[1] = teacher.phone;
+				 this.value1 = new Date(teacher.birthday);
+				 
+				 this.lx_val = teacher.source_type_id ==1?'机构':'学校';
+				 this.lx_cl();
+				 this.dw_id = teacher.source_id;
+				 this.dw_val = teacher.source_name;
+				 
+				 
+				 this.input[2] = teacher.bank_account;
+				 this.banke_se = teacher.bank_province;
+				 this.banke_cs = teacher.bank_city;
+				 this.banke_name = teacher.bank_name;
+				
+				 this.radio = teacher.idcard_type;
+				    
+				 this.input[3] = teacher.idcard_number;
+				 this.checkedCities = category;
+			
+			     if(this.lx_val=='机构'){
+				    for(var i=0;i<attachment.length;i++){
+					    if(attachment[i].id==1){this.img_url_box.s1 = attachment[i].url}
+						if(attachment[i].id==2){this.img_url_box.s2 = attachment[i].url}
+						if(attachment[i].id==6){this.img_url_box.s6 = attachment[i].url}
+				    }
+					this.fist_box.s1[0] = {name:'s1',url:this.img_url_box.s1};
+					this.fist_box.s2[0] = {name:'s1',url:this.img_url_box.s2};
+					this.fist_box.s6[0] = {name:'s1',url:this.img_url_box.s6};
+			     }else if(this.lx_val=='学校'){
+				     for(var i=0;i<attachment.length;i++){
+				        if(attachment[i].id==7){this.img_url_box.s7 = attachment[i].url}
+				    	if(attachment[i].id==8){this.img_url_box.s8 = attachment[i].url}
+						if(attachment[i].id==6){this.img_url_box.s6 = attachment[i].url}
+				    }
+					this.fist_box.s7[0] = {name:'s1',url:this.img_url_box.s7};
+					this.fist_box.s8[0] = {name:'s1',url:this.img_url_box.s8};
+					this.fist_box.s6[0] = {name:'s1',url:this.img_url_box.s6};
+			     }
+				 for(var i=0;i<attachment.length;i++){
+				     if(attachment[i].id==3){this.img_url_box.s3.push(attachment[i].url)}
+				 }
+				 for(var i=0;i<this.img_url_box.s3.length;i++){
+					this.fist_box.s3.push({name:'s1',url:this.img_url_box.s3[i]})
+				 }
+				 console.log(this.img_url_box);
+				 
+		  		}
+		     }).catch(error=> {});
+		}
+	},
 //提交数据
 	git_active(){
-		
+		if(this.input[0]){}else{ this.$message({message:'请填写教师姓名！',type:'warning'});return false}
+		if(this.jd_id2){}else{ this.$message({message:'请选择街道！',type:'warning'});return false}
+		if(this.xl_id){}else{ this.$message({message:'请选择学历！',type:'warning'});return false}
+		if(this.sex_val){}else{ this.$message({message:'请选择性别！',type:'warning'});return false}
+		if(this.input[1]){}else{ this.$message({message:'请填写手机号码！',type:'warning'});return false}
+		if(this.value1){}else{ this.$message({message:'请选择生日！',type:'warning'});return false}
+	    if(sessionStorage.teacher_id==''){//判断当前页面为添加状态
+		  if(this.dw_id){}else{this.$message({message:'请选择教师来源组织！',type:'warning'});return false}
+	    }
+		if(this.checkedCities.length!=0){}else{this.$message({message:'请选择授课门类！',type:'warning'});return false}
+		if(this.lx_val=='机构'){
+			if(this.idcard_show==false&&this.radio=='1'){this.$message({message:'身份证号验证未通过，请重新输入身份证号！',type:'warning'});return false}
+			if(this.img_url_box.s1==''){this.$message({message:'请上传教师资格证',type:'warning'});return false};
+			if(this.img_url_box.s2==''){this.$message({message:'请上传合同盖章页（尾页）',type:'warning'});return false};
+		}else if(this.lx_val=='学校'){
+			if(this.bank_show==false){this.$message({message:'银行卡号验证未通过，请重新输入银行卡号！',type:'warning'});return false}
+			if(this.idcard_show==false&&this.radio=='1'){this.$message({message:'身份证号验证未通过，请重新输入身份证号！',type:'warning'});return false}
+			if(this.img_url_box.s7==''){this.$message({message:'请上传身份证（正面）',type:'warning'});return false};
+			if(this.img_url_box.s8==''){this.$message({message:'请上传身份证（反面）',type:'warning'});return false};
+		}
+		if(this.img_url_box.s6){}else{this.$message({message:'请上传职业照',type:'warning'});return false}
 		let postData = {
-			
-			 name:$('#name_s').val(),//教师姓名
-			 source_type_id:source_type_id_s,//教师来源类型id 1：机构，2学校
-			 source_id:source_id_s,//来源的组织id
+			 name:this.input[0],//教师姓名
+			 source_type_id:this.lx_val=='机构'?1:2,//教师来源类型id 1：机构，2学校
+			 source_id:this.dw_id,//来源的组织id
 			 role_type_id:1,//教师的角色id  目前只有1，
-			 gender:$('#sex').find("option:selected").html()=='男'?1:2,//性别：1：男， 2： 女，默认-1
-			 phone:$('#iphone_s').val(),//教师手机号码
-			 birthday:$('#nian').find("option:selected").attr('index')+'/'+$('#yue').find("option:selected").attr('index')+'/'+$('#ri').find("option:selected").attr('index'),
+			 gender:this.sex_val=='男'?1:2,//性别：1：男， 2： 女，默认-1
+			 phone:this.input[1],//教师手机号码
+			 birthday:this.value1.getFullYear()+'/'+(this.value1.getMonth()+1)+'/'+this.value1.getDate(),//生日
 			 origin_country:'中国',//国籍
 			 origin_province:'440',//省份id
-			 origin_city:sessionStorage.cs_id,//城市id
-			 origin_region:qy_id1,//区域id
-			 origin_street:jd_id1,//街道id
-			 idcard_type:zheng_id,//身份证件类型：1：身份证、2：护照、3：港澳通行证/回乡证
-			 idcard_number:$('#exid_s').val(),//证件号码
-			 edu_degree_type_id:xue_li_id,//学历类型编号  1研究生学历，2，本科学历，3专升本学历，4专科学理
-			 bank_account:$('#yin_kid_s').val(),//银行卡号
-			 attachment_1:attachments['1'],//教师资格证
-			 attachment_2:attachments['2'],//劳动合同
-			 attachment_3:attachments['3'],//其他资格证书
-			 attachment_6:attachments['6'],//职业照
-			 attachment_7:attachments['7'],//身份证正面
-			 attachment_8:attachments['8'],//身份证反面
+			 origin_city:localStorage.cs_id,//城市id
+			 origin_region:this.qy_id2,//区域id
+			 origin_street:this.jd_id2,//街道id
+			 idcard_type:this.radio,//身份证件类型：1：身份证、2：护照、3：港澳通行证/回乡证
+			 idcard_number:this.input[3],//证件号码
+			 edu_degree_type_id:this.xl_id,//学历类型编号  1研究生学历，2，本科学历，3专升本学历，4专科学理
+			 bank_account:this.input[2],//银行卡号
+			 attachment_1:this.img_url_box.s1,//教师资格证
+			 attachment_2:this.img_url_box.s2,//劳动合同
+			 attachment_3:this.img_url_box.s3,//其他资格证书
+			 attachment_6:this.img_url_box.s6,//职业照
+			 attachment_7:this.img_url_box.s7,//身份证正面
+			 attachment_8:this.img_url_box.s8,//身份证反面
+			 category:this.checkedCities,//授课门类
+			 bank_province:this.banke_se,//银行卡开户省份
+			 bank_city:this.banke_cs,////银行卡开户市
+			 bank_name:this.banke_name,//开户银行
 			 
-			 category:ke_id_box,//授课门类
-			 bank_province:$('#yin_sheng').find("option:selected").html(),//银行卡开户省份
-			 bank_city:$('#yin_shi').find("option:selected").html(),////银行卡开户市
-			 bank_name:$('#aer').html(),//开户银行
 		};
 		let type = sessionStorage.teacher_id==''?'post':'put';
 		this.$axios({method:type,url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,params:postData,
 		     headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
 		     console.log(res.data,'添加结果')
 		     if(res.data.code==200){
-				 
-		    }}).catch(error=> {});
+				this.$message({message:'提交成功',type:'success'});
+				this.$router.go(-1);
+		    }else{
+				let box=res.data.data;let vals = '';
+				for (var index in box){vals=box[index].join(' ')}
+				this.$alert(vals,'服务器返回!',{confirmButtonText:'确定',callback:action=>{}})}
+			}).catch(error=> {this.$message.error('发生了错误！');});
 	},
 //返回	
 	quxioa(){this.$router.go(-1);},//返回上一页
@@ -318,7 +454,7 @@
 		  for(var i=0;i<fileList.length;i++){this.img_url_box.s3.push(fileList[i].response.data.image)}
 		  console.log(this.img_url_box);
 	  },
-	  exceed(){this.$message.error('其他证件照不能超过5张')},
+	  exceed(){this.$message.error('其他职业照不能超过5张')},
 //教师资格证  	  
 	  handleRemove1(file, fileList) {//删除
 		this.img_url_box.s1 = ''; console.log(this.img_url_box)
@@ -366,7 +502,6 @@
 		  console.log(this.img_url_box)
 	  },	  
 	  
-	  
       on_error_on(err, file, fileList){//上传失败
 		  this.$message.error('上传失败');console.log(err)
 	  },
@@ -395,19 +530,20 @@
 		
 //获取来源
          lx_cl(){//教师类型被点击 机构||学校
-		    
 			this.dw_val = '';this.dw_id = '';
 			let url = this.lx_val=='机构'?'institutions':'schools';
 			this.dada_x_j = this.lx_val=='机构'?true:false;
 			
 			this.img_url_box.s1='';this.img_url_box.s2='';this.img_url_box.s6='';
-			this.img_url_box.s7='';this.img_url_box.s8='';
+			this.img_url_box.s7='';this.img_url_box.s8='';//清空数据层图片容器
 			
 			this.fist_box.s1=[];this.fist_box.s2=[];this.fist_box.s6=[];
-			this.fist_box.s7=[];this.fist_box.s8=[];
+			this.fist_box.s7=[];this.fist_box.s8=[];//清空视图层图片容器
+			
+			this.radio='1';//重新定义证件类型为身份证
 			
 			this.$axios({method:'get',url:store.state.url_data+'/api/'+url+'?type=options&audit_status=2',
-			headers:{'Authorization':'Bearer '+localStorage.token}}
+			   headers:{'Authorization':'Bearer '+localStorage.token}}
 			   ).then(res=>{
 			     if(res.data.code==200){
 					 this.dw_box = res.data.data;
@@ -441,9 +577,8 @@
 		   		  		if(localStorage.cs_id==res.data.data[i].city_id){
 		   		  			this.cs_box2 = [];this.cs_box2.push(res.data.data[i]);this.cs_val2 = res.data.data[i].city_name;
 		   		  		}
-		   		  }; this.qy_fn2();//获取区域数据
+		   		  };this.qy_fn2();//获取区域数据
 				    
-				     
 		   		}}).catch(error=> {});
 		},
 		
@@ -496,11 +631,8 @@
 			this.git_xl_act();
 			this.lx_cl();
 			this.git_check();
-			
-			 
+			this.git_put_act();
 		},
-		 
-		 
 	 };
 </script>
 <style scoped="scoped">

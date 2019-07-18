@@ -35,11 +35,11 @@
 		}
 	 },
 		
-     git_top_num(){//获取顶部消息审核数据
+   git_top_num(){//获取顶部消息审核数据
 		this.$axios({method:'get',url:store.state.url_data+'/api/works',headers:{'Authorization':'Bearer '+localStorage.token}}
 		   ).then(res=>{
-              console.log(res.data,'顶部数据');
-             if(res.data.code==200){
+        console.log(res.data,'顶部数据');
+      if(res.data.code==200){
 				this.message_um = '待查看消息'+'('+res.data.message.message_count+')';
 				this.auit_um = '待审核内容'+'('+res.data.message.audit_count+')';
 				store.state.message_box = res.data.message.message;
@@ -48,6 +48,13 @@
 			 }else{this.loading = false;}
            }).catch(error=> {
               this.loading = false;
+							console.log(error);
+							 this.$notify({
+                  title: '警告',
+                  message: '账号异常请重新登录',
+                  type: 'warning'
+                });
+							 this.$router.push('/login')	
            });
 		},
 		
@@ -56,8 +63,8 @@
 	mounted(){
 	},
 	created(){
-		localStorage.token = 'CDC7YMu8IzVPZhkjNcsYdJurU37Hmttz8vkl';//写死token
-		localStorage.cs_id = 440100000000;//写死城市id
+		// localStorage.token = 'ahuD3611GYCV8V36B97YW3qYuMoiyrqAExoz';//写死token
+		// localStorage.cs_id = 440100000000;//写死城市id
 		
 		this.loading = true;
 		this.git_top_num();

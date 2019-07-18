@@ -15,7 +15,7 @@
 		 <div v-show="p_val_11"  class="tab_box"><p>办学许可证号：</p><a>{{p_val_11}}</a></div>
 		 <div v-show="p_val_12"  class="tab_box"><p>公司官网：</p><a>{{p_val_12}}</a></div>
 		 
-		 <div style="width:100%;height:380px;margin-left:-15px;margin-top: 20px;">
+		 <div style="width:100%;height:380px;margin-left:-30px;margin-top: 20px;">
 			 <div class="img_box">
 				 <img v-if="url_box[0]" @click="img_click(url_box[0])" :src="url_box[0]"><img v-else src="../../assets/img/nopicture.png" alt="">
 				 <p>法人证件照(反面 )：</p>
@@ -40,15 +40,17 @@
 		 </div>
 	<!-- 审核展示的 -->	 
 	<div v-if="detail_val=='审核'">
-		 <div class="tab_box" style="height:150px;">
+		 <div class="tab_box" style="height:150px;width: 100%;float: left;">
 			 <p style="line-height: 30px;">原因备注：</p>
 			 <textarea v-model="textarea" style='' cols="30" rows="10" placeholder="请输入内容(审核不通过必须填写原因备注)" ></textarea>
 		 </div>
+		<div style="float: left;width: 100%;padding-bottom:20px;">
 		 <div class="btn_boxs">
 			 <el-button @click='fanhui' style='float: left;'>返回列表</el-button>
 			 <el-button @click='git_audit("pass")' style='margin-left:33px' type="primary">审核通过</el-button>
 			 <el-button @click='git_audit("unpass")' style='float: right;' type="warning">审核拒绝</el-button>
 		 </div>
+		</div>  
 	</div>	 	
 	<!-- 详情展示的 -->
 	 <div v-else>

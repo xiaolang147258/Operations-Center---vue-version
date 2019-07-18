@@ -20,7 +20,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img src="../../assets/401_images/401.gif" class="user-avatar">
           <!-- <i class="el-icon-caret-bottom" /> -->
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -42,6 +42,25 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+		
+		 <transition name="el-fade-in-linear">
+         <div v-show="show" class="transition-box">
+			    <el-collapse-transition>
+							 <el-card v-show="show" class="xiu_box">     
+									<div class="inp_box">
+										 <p>旧密码:</p><el-input placeholder="请输入内容" v-model="input10" clearable></el-input>
+                     <p>新密码:</p><el-input placeholder="请输入内容" v-model="input11" clearable></el-input>
+                     <p>确认密码:</p><el-input placeholder="请输入内容" v-model="input12" clearable></el-input>
+  
+             
+									</div> 
+									 
+									 
+							 </el-card>		 
+          </el-collapse-transition>
+				 </div> 
+      </transition>
+		
   </div>
 </template>
 
@@ -53,16 +72,31 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import {removeToken} from '@/utils/auth'
+
+
 
 export default {
-  components: {
+  components:{
     Breadcrumb,
     Hamburger,
     ErrorLog,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
+		
+		
   },
+	data(){
+		return{
+			 show:true,
+			 input10:'',
+			 input11:'',
+			 input12:'',
+			 
+		}
+	},
+	
   computed: {
     ...mapGetters([
       'sidebar',
@@ -75,7 +109,8 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
+      // await this.$store.dispatch('user/logout')
+			// removeToken()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
@@ -83,6 +118,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.inp_box p{
+		font-size: 14px;
+		font-weight: 600;
+		float: left;
+	}
+	.inp_box{
+		width: 100%;
+		height:40px;
+		margin: 20px auto;
+	}
+	
+	.xiu_box{
+		width:500px;
+		height: 500px;
+		background:white;
+		margin: 100px auto;
+	}
+	
+	.transition-box{
+		 position:fixed;
+		 top: 0;
+		 left: 0;
+		 width: 100%;
+		 height: 100%;
+		 z-index: 500;
+		 background: rgba(0,0,0,.2);
+	}
+	
+	
 .navbar {
   height: 50px;
   overflow: hidden;

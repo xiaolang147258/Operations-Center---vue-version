@@ -8,17 +8,17 @@
 			   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' v-model="sh_val" clearable placeholder="请选择状态">
+			<el-select class='tab_c' @change='zt_cl' style='width:150px;' v-model="sh_val" clearable placeholder="请选择状态">
 			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' v-model="cs_val" placeholder="请选择城市">
+			<el-select class='tab_c' v-model="cs_val" style='width:150px;' placeholder="请选择城市">
 			   <el-option v-for="(item,index) in cs_box" :key="index" :label="item.city_name" :value="item.city_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='qy_click' v-model="qy_val" clearable placeholder="请选择区域">
+			<el-select class='tab_c' @change='qy_click' style='width:150px;' v-model="qy_val" clearable placeholder="请选择区域">
 			   <el-option v-for="(item,index) in qy_box" :key="index" :label="item.region_name" :value="item.region_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='jd_click' v-model="jd_val" clearable placeholder="请选择街道">
+			<el-select class='tab_c' @change='jd_click' style='width:150px;' v-model="jd_val" clearable placeholder="请选择街道">
 			   <el-option v-for="(item,index) in jd_box" :key="index" :label="item.street_name" :value="item.street_id"></el-option>
 			</el-select>
 			
