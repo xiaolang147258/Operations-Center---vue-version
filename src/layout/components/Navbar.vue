@@ -27,9 +27,11 @@
           <router-link to="/profile/index">
             <el-dropdown-item></el-dropdown-item>
           </router-link>
-          <router-link to="/">
-            <el-dropdown-item>修改密码</el-dropdown-item>
-          </router-link>
+         
+            <el-dropdown-item>
+							   <span @click='show=true' style="width: 100%;height: 100%;">修改密码</span>
+						</el-dropdown-item>
+         
           <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a> -->
@@ -47,15 +49,17 @@
          <div v-show="show" class="transition-box">
 			    <el-collapse-transition>
 							 <el-card v-show="show" class="xiu_box">     
-									<div class="inp_box">
+									<div class="inp_box" style="height: auto;float: left;">
 										 <p>旧密码:</p><el-input placeholder="请输入内容" v-model="input10" clearable></el-input>
                      <p>新密码:</p><el-input placeholder="请输入内容" v-model="input11" clearable></el-input>
                      <p>确认密码:</p><el-input placeholder="请输入内容" v-model="input12" clearable></el-input>
-  
-             
 									</div> 
-									 
-									 
+								<div style="width: 100%;float: left;">
+									<div style="width: 200px;height:40px;margin: 20px auto;">
+										  <el-button @click='show=false' style='float:left;' type="info">取消</el-button>
+										  <el-button @click='loginout' style='float:right;' type="primary">确定</el-button>
+									</div>
+									 </div>	
 							 </el-card>		 
           </el-collapse-transition>
 				 </div> 
@@ -73,6 +77,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import {removeToken} from '@/utils/auth'
+import store from '../../vuex/store.js'
 
 
 
@@ -89,7 +94,7 @@ export default {
   },
 	data(){
 		return{
-			 show:true,
+			 show:false,
 			 input10:'',
 			 input11:'',
 			 input12:'',
@@ -105,13 +110,50 @@ export default {
     ])
   },
   methods: {
+		loginout(){
+			 if(this.input10){}else{ this.$message.error('旧密码不能为空！');return false};
+			 if(this.input11){}else{ this.$message.error('新密码不能为空！');return false};
+			 if(this.input12){}else{ this.$message.error('确认密码不能为空！');return false};
+			 if(this.input12==this.input11){}else{ this.$message.error('确认密码与新密码不匹配，请重新输入！');return false};
+			
+			 this.$axios({method:'post',url:store.state.url_data+'/api/resetPassword',
+			     data:{
+						 'original_password':this.input10,
+						 'password':this.input11,
+						 'password_confirmation':this.input12,
+						 'phone':sessionStorage.act_id
+						 },headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+					 console.log(res)
+			     if(res.data.code==200){
+						    this.$message({
+                  message: '修改密码成功，需要重新登录',
+                  type: 'success'
+                });
+								this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+					 }else{
+						 this.$message.error('修改密码失败！');
+					 }
+					 }).catch(error=> {this.$message.error('修改失败,密码不正确！');});
+		},
+		
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
       // await this.$store.dispatch('user/logout')
 			// removeToken()
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+			this.$confirm('此操作将退出账号, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        }).catch(() => { });
+       
+			
+			
+     
     }
   }
 }
@@ -131,7 +173,7 @@ export default {
 	
 	.xiu_box{
 		width:500px;
-		height: 500px;
+		height: 400px;
 		background:white;
 		margin: 100px auto;
 	}

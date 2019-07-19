@@ -79,7 +79,7 @@ export const constantRoutes = [
 	    {
 	      path: '/Workbench001',
 	      component: () => import('@/vif_box/Workbench001/index'),
-	      name:'Boxas',
+	      name:'Workbench001',
 	      meta: { title: '工作台', icon: 'tree', affix: true }
 	    }
 	  ]
@@ -91,8 +91,8 @@ export const constantRoutes = [
 	    {
 	      path: '/Message_Center002',
 	      component: () => import('@/vif_box/Message_Center002/index'),
-	      name:'Boxas',
-	      meta: { title: '消息中心', icon: 'message', affix: true }
+	      name:'Message_Center002',
+	      meta: { title: '消息中心', icon: 'message', affix: false }
 	    }
 	  ]
 	},
@@ -103,8 +103,8 @@ export const constantRoutes = [
 	    {
 	      path: '/Audit_center003',
 	      component: () => import('@/vif_box/Audit_center003/index'),
-	      name:'Boxas',
-	      meta: { title: '审核中心', icon: 'form', affix: true }
+	      name:'Audit_center003',
+	      meta: { title: '审核中心', icon: 'form', affix: false }
 	    }
 	  ]
 	},
@@ -117,20 +117,32 @@ export const constantRoutes = [
 	    {
 	      path: '/Institutional_management_001',
 	      component: () => import('@/vif_box/information_Center004/Institutional_management_001/index001'),
-	      name:'Boxas',
-	      meta: { title: '机构管理',affix: true }
+	      name:'Institutional_management_001',
+	      meta: { title: '机构管理',affix: false }
 	    },
 			{
 			  path: '/Course_management_002',
 			  component: () => import('@/vif_box/information_Center004/Course_management_002/index002'),
-			  name:'Boxas',
-			  meta: { title: '课程管理',affix: true }
+			  name:'Course_management_002',
+			  meta: { title: '课程管理',affix: false }
 			},
 			{
 			  path: '/Teacher_management_003',
 			  component: () => import('@/vif_box/information_Center004/Teacher_management_003/index003'),
-			  name:'Boxas',
-			  meta: { title: '教师管理',affix: true }
+			  name:'Teacher_management_003',
+			  meta: { title: '教师管理',affix: false }
+			},
+			{
+			  path: '/School_management',
+			  component: () => import('@/vif_box/information_Center004/School_management_004/School_management'),
+			  name:'School_management',
+			  meta: { title: '学校管理',affix: false }
+			},
+			{
+			  path: '/semester',
+			  component: () => import('@/vif_box/information_Center004/semester_005/semester'),
+			  name:'semester',
+			  meta: { title: '学期管理',affix: false }
 			},
 	  ]
 	},
@@ -146,7 +158,7 @@ export const constantRoutes = [
 	      path: '/ji_audit_001',
 	      component: () => import('@/vif_box/Audit_center003/ji_audit_001'),
 	      name:'ji_audit_001',
-	      meta: { title: '机构审核',affix: true }
+	      meta: { title: '机构审核',affix: false }
 	    }
 	  ]
 	},
@@ -159,7 +171,7 @@ export const constantRoutes = [
 	      path: '/ke_audit_002',
 	      component: () => import('@/vif_box/Audit_center003/ke_audit_002'),
 	      name:'ke_audit_002',
-	      meta: { title: '课程审核',affix: true}
+	      meta: { title: '课程审核',affix: false}
 	    }
 	  ]
 	},
@@ -172,7 +184,7 @@ export const constantRoutes = [
 	      path: '/jiao_shi_audit_003',
 	      component: () => import('@/vif_box/Audit_center003/jiao_shi_audit_003'),
 	      name:'jiao_shi_audit_003',
-	      meta: { title: '教师审核',affix:true}
+	      meta: { title: '教师审核',affix:false}
 	    }
 	  ]
 	},
@@ -187,7 +199,7 @@ export const constantRoutes = [
 	      path: '/add_course',
 	      component: () => import('@/vif_box/information_Center004/Course_management_002/add_course'),
 	      name:'add_course',
-	      meta: { title: '课程添加/编辑',affix:true}
+	      meta: { title: '课程添加/编辑',affix:false}
 	    }
 	  ]
 	},
@@ -201,10 +213,25 @@ export const constantRoutes = [
 	      path: '/003_add_teacher',
 	      component: () => import('@/vif_box/information_Center004/Teacher_management_003/003_add_teacher'),
 	      name:'003_add_teacher',
-	      meta: { title: '教师添加/编辑',affix:true}
+	      meta: { title: '教师添加/编辑',affix:false}
 	    }
 	  ]
 	},
+	//添加、编辑学校
+	{
+		hidden: true,//当设置 true 的时候该路由不会再侧边栏出现
+	  path: '/add_School_management',
+	  component: Layout,
+	  children: [
+	    {
+	      path: '/add_School_management',
+	      component: () => import('@/vif_box/information_Center004/School_management_004/add_School_management'),
+	      name:'add_School_management',
+	      meta: { title: '学校添加/编辑',affix:false}
+	    }
+	  ]
+	},
+	
 	
 	
 ]

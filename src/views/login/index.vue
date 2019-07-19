@@ -80,7 +80,7 @@ export default {
     return {
       loginForm: {
         username: '13435439310',
-        password: '159357'
+        password: '123123'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -125,7 +125,7 @@ export default {
 						    this.$notify({title:'成功',message:'登录成功！',type:'success'});
 								localStorage.token = res.data.data.token;
 								localStorage.cs_id = res.data.data.city_permissions[0].city_id;
-								
+								sessionStorage.act_id = this.loginForm.username;
 								setToken(res.data.data.token)
 								this.$router.push({ path: '/Workbench001' });
 						 }else{
