@@ -4,42 +4,62 @@
 	   <el-card v-loading="loading" class="box-card"  style="padding:0;margin:20px;padding-bottom: 20px;">
 		<div style="width:100%;margin-bottom:10px;float: left;">
            
-			<el-select class='tab_c'  @change='lx_cl' v-model="lx_val" clearable placeholder="请选择类型">
+			<el-select class='tab_c'  @change='lx_cl' style='width:150px;' v-model="lx_val" clearable placeholder="课程门类">
 			   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:150px;' v-model="sh_val" clearable placeholder="请选择状态">
+			<el-select class='tab_c' @change='zt_cl' style='width:120px;' v-model="sh_val" clearable placeholder="服务类型">
 			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' v-model="cs_val" style='width:150px;' placeholder="请选择城市">
+			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="年级">
+			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			</el-select>
+			
+			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="班级">
+			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			</el-select>
+			
+			<el-select class='tab_c' v-model="cs_val" style='width:110px;' placeholder="城市">
 			   <el-option v-for="(item,index) in cs_box" :key="index" :label="item.city_name" :value="item.city_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='qy_click' style='width:150px;' v-model="qy_val" clearable placeholder="请选择区域">
+			<el-select class='tab_c' @change='qy_click' style='width:110px;' v-model="qy_val" clearable placeholder="区域">
 			   <el-option v-for="(item,index) in qy_box" :key="index" :label="item.region_name" :value="item.region_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='jd_click' style='width:150px;' v-model="jd_val" clearable placeholder="请选择街道">
+			<el-select class='tab_c' @change='jd_click' style='width:110px;' v-model="jd_val" clearable placeholder="街道">
 			   <el-option v-for="(item,index) in jd_box" :key="index" :label="item.street_name" :value="item.street_id"></el-option>
 			</el-select>
 			
-			<div class='inp_a'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
+			<div class='inp_a' style='width:150px;'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
+			
+			<el-button style='float:right;' type="primary">导出excel</el-button>
 		</div>
 		
    <div style="width:100%;float: left;">
 	<el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%">
-       <!-- <el-table-column type="selection" width="100" align='center' header-align='center'></el-table-column> -->
-       <el-table-column prop="created_at" align='center' header-align='center' label="提交日期时间"><template slot-scope="scope">{{ scope.row.created_at }}</template></el-table-column>
-       <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
+       
+	   <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
        <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
        <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="类型" ></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="状态" ></el-table-column>
+	   
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务年级" ></el-table-column>
+	   <el-table-column prop="city_name" align='center' header-align='center' label="服务类型" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="课程门类" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="street_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="平台课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="课班名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="city_name" align='center' header-align='center' label="上课时间" ></el-table-column>
+	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="总价格（课时单价x课时总数+材料费+教材费）" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="street_name" align='center' header-align='center' label="课程日期（开始/结束）" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="授课老师" ></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="报名人数" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="开班下限/开班上限" show-overflow-tooltip></el-table-column>
 	   
        <el-table-column  label="操作" align='center' header-align='center'>
 		   <template slot-scope="scope">
-			  <el-button style='margin-left:10px;' @click='audit_click(scope.row,"详情")' v-show='scope.row.audit_status_name!="待审核"' type="primary" plain>详情</el-button>
-			  <el-button @click='audit_click(scope.row,"审核")' v-show='scope.row.audit_status_name=="待审核"' type="success" plain>审核</el-button>
+			  <el-button @click='fen_shi("")' type="primary" plain>分配老师</el-button>
 	       </template>
 	   </el-table-column>
      </el-table>
@@ -48,7 +68,6 @@
 	<div style="float:right;margin-right:10px;">
        <el-pagination background @size-change="handleSizeChange"
        @current-change="handleCurrentChange"
-       
        :page-sizes="ye_s"
        :page-size="100"
        layout="total, sizes, prev, pager, next, jumper"
@@ -57,16 +76,47 @@
 	  </div>
      </div>
   </div>
+  
+    <transition name="el-fade-in-linear">
+       <div v-show="show" class="transition-box">
+    			<transition name="el-zoom-in-top">
+             <el-card v-show="show" class="transition-boxs">
+    				  
+    				 <p style="font-size:20px;font-weight:600;text-align:center;margin-bottom:30px;margin-top:10px;">分配老师</p>  
+    				 
+    				 <div class="box_call">
+    				    <div style="width:400px;float:right;height:100%;">
+							<el-select class='tab_c'  @change='lx_cl' style='width:250px;' v-model="lx_val" clearable placeholder="请选择老师">
+							   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
+							</el-select>
+							<el-button @click='create_there' type="primary">添加老师</el-button>
+						</div>
+    				   
+    				 </div> 
+    				    
+    				<div style="width:180px;height:40px;margin:35px auto;">
+    					   <el-button @click='show=false' style='float:left;' type="info">取消</el-button>
+    					   <el-button style='float:right;' type="primary">确认</el-button>
+    				</div>
+    			  </el-card>
+          </transition>
+    		</div>
+     </transition>
+  
   </el-card>
 </div>
 </template>
 
 <script>
-	import store from "../../vuex/store.js";
+	import store from "../../../vuex/store.js";
      export default {
 	  data(){
 	    return {
-			sh_val:'',
+		  input_val:'',
+			
+		  show:false,
+			
+		  sh_val:'',
 		  sh_zt_box:[],
 		  sh_zt_id:'',
 			
@@ -100,6 +150,18 @@
 	  },
 		
 	methods:{
+		create_there(){//添加老师按钮被点击
+		  this.show = false;
+		  this.$router.push({path:'/Teacher_management_003'});
+			
+		},
+		
+//分配老师被点击		
+		fen_shi(i){
+			this.show=true;
+		},
+		
+		
 		//获取审核状态数据
 		git_zt(){
 		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
@@ -244,6 +306,42 @@
 	
 </script>
 <style scoped="scoped">
+	.box_call_c{
+		width:400px;float:right;height:100%;
+	}
+	.box_call p{
+		float: right;
+		font-size: 15px;
+		font-weight: 600;
+		margin: 0;
+		margin-right: 10px;
+		line-height: 40px;
+	}
+	.box_call{
+		width: 100%;
+		height: 40px;
+		margin: 25px 0;
+		padding-right: 0px;
+	}
+	
+	.transition-boxs{
+		width: 500px;
+		height: 240px;
+		background: white;
+		margin: 100px auto;
+	}
+	
+	.transition-box{
+		 position: fixed;
+		 top: 0;
+		 left: 0;
+		 z-index: 500;
+		 width: 100%;
+		 height: 100%;
+		 background: rgba(0,0,0,.3);
+		}
+	
+	
 	.tds{
 		text-align: center;
 	}

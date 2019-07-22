@@ -1,54 +1,66 @@
 <template>
-	<!-- 工作台-审核 -->
+	<!-- 班级名单 -->
 	<div style="width:100%;">
 	   <el-card v-loading="loading" class="box-card"  style="padding:0;margin:20px;padding-bottom: 20px;">
 		<div style="width:100%;margin-bottom:10px;float: left;">
            
-			<el-select class='tab_c'  @change='lx_cl' v-model="lx_val" clearable placeholder="请选择类型">
+			<el-select class='tab_c'  @change='lx_cl' style='width:150px;' v-model="lx_val" clearable placeholder="课程门类">
 			   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:150px;' v-model="sh_val" clearable placeholder="请选择状态">
+			<el-select class='tab_c' @change='zt_cl' style='width:120px;' v-model="sh_val" clearable placeholder="服务类型">
 			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' v-model="cs_val" style='width:150px;' placeholder="请选择城市">
+			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="年级">
+			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			</el-select>
+			
+			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="班级">
+			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			</el-select>
+			
+			<el-select class='tab_c' v-model="cs_val" style='width:110px;' placeholder="城市">
 			   <el-option v-for="(item,index) in cs_box" :key="index" :label="item.city_name" :value="item.city_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='qy_click' style='width:150px;' v-model="qy_val" clearable placeholder="请选择区域">
+			<el-select class='tab_c' @change='qy_click' style='width:110px;' v-model="qy_val" clearable placeholder="区域">
 			   <el-option v-for="(item,index) in qy_box" :key="index" :label="item.region_name" :value="item.region_id"></el-option>
 			</el-select>
-			<el-select class='tab_c' @change='jd_click' style='width:150px;' v-model="jd_val" clearable placeholder="请选择街道">
+			<el-select class='tab_c' @change='jd_click' style='width:110px;' v-model="jd_val" clearable placeholder="街道">
 			   <el-option v-for="(item,index) in jd_box" :key="index" :label="item.street_name" :value="item.street_id"></el-option>
 			</el-select>
 			
-			<div class='inp_a'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
+			<div class='inp_a' style='width:150px;'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
+			
+			<el-button style='float:right;' type="primary">导出excel</el-button>
 		</div>
 		
    <div style="width:100%;float: left;">
 	<el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%">
-       <!-- <el-table-column type="selection" width="100" align='center' header-align='center'></el-table-column> -->
-       <el-table-column prop="created_at" align='center' header-align='center' label="提交日期时间"><template slot-scope="scope">{{ scope.row.created_at }}</template></el-table-column>
-       <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
+       
+	   <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
        <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
        <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="类型" ></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="状态" ></el-table-column>
 	   
-       <el-table-column  label="操作" align='center' header-align='center'>
-		   <template slot-scope="scope">
-			  <el-button style='margin-left:10px;' @click='audit_click(scope.row,"详情")' v-show='scope.row.audit_status_name!="待审核"' type="primary" plain>详情</el-button>
-			  <el-button @click='audit_click(scope.row,"审核")' v-show='scope.row.audit_status_name=="待审核"' type="success" plain>审核</el-button>
-	       </template>
-	   </el-table-column>
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="机构课程名称" ></el-table-column>
+	   <el-table-column prop="city_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="年级班级" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="street_name" align='center' header-align='center' label="学生姓名" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="课程门类" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务类型" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="city_name" align='center' header-align='center' label="授课老师" ></el-table-column>
+	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="教师号码" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="street_name" align='center' header-align='center' label="上课日期时间" show-overflow-tooltip></el-table-column>
+	   
+       
      </el-table>
   <div style="margin-top:20px;">
 <!-- 分页插件 :current-page="currentPage4" -->
 	<div style="float:right;margin-right:10px;">
        <el-pagination background @size-change="handleSizeChange"
        @current-change="handleCurrentChange"
-       
        :page-sizes="ye_s"
        :page-size="100"
        layout="total, sizes, prev, pager, next, jumper"
@@ -57,16 +69,23 @@
 	  </div>
      </div>
   </div>
+  
+    
+  
   </el-card>
 </div>
 </template>
 
 <script>
-	import store from "../../vuex/store.js";
+	import store from "../../../vuex/store.js";
      export default {
 	  data(){
 	    return {
-			sh_val:'',
+		  input_val:'',
+			
+		 
+			
+		  sh_val:'',
 		  sh_zt_box:[],
 		  sh_zt_id:'',
 			
@@ -100,6 +119,7 @@
 	  },
 		
 	methods:{
+		
 		//获取审核状态数据
 		git_zt(){
 		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
@@ -244,6 +264,7 @@
 	
 </script>
 <style scoped="scoped">
+	
 	.tds{
 		text-align: center;
 	}

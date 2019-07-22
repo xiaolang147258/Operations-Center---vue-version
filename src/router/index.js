@@ -144,8 +144,43 @@ export const constantRoutes = [
 			  name:'semester',
 			  meta: { title: '学期管理',affix: false }
 			},
+			{
+			  path: '/supplier_006',
+			  component: () => import('@/vif_box/information_Center004/supplier_006/supplier_006'),
+			  name:'supplier_006',
+			  meta: { title: '供应商管理',affix: false }
+			},
 	  ]
 	},
+	
+	
+	{
+	  path: '/Class_center_005',
+	  component: Layout,
+		meta: { title: '课表中心', icon: 'table', affix: true },
+	  children: [
+	    {
+	      path: '/curriculum_schedule_001',
+	      component: () => import('@/vif_box/Class_center_005/curriculum_schedule_001/curriculum_schedule_001'),
+	      name:'curriculum_schedule_001',
+	      meta: { title: '课程列表',affix: false }
+	    },
+			{
+			  path: '/Class_list_002',
+			  component: () => import('@/vif_box/Class_center_005/Class_list_002/Class_list_002'),
+			  name:'Class_list_002',
+			  meta: { title: '班级名单',affix: false }
+			},
+			{
+			  path: '/Platform_deployment_003',
+			  component: () => import('@/vif_box/Class_center_005/Platform_deployment_003/Platform_deployment_003'),
+			  name:'Platform_deployment_003',
+			  meta: { title: '平台调配',affix: false }
+			},
+			
+	  ]
+	},
+	
 	
 	
 	//审核详情
