@@ -422,8 +422,7 @@
 			 category:this.checkedCities,//授课门类
 			 bank_province:this.banke_se,//银行卡开户省份
 			 bank_city:this.banke_cs,////银行卡开户市
-			 bank_name:this.banke_name,//开户银行
-			 
+			 bank_name:this.banke_name//开户银行
 		};
 		let type = sessionStorage.teacher_id==''?'post':'put';
 		this.$axios({method:type,url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,params:postData,
@@ -441,7 +440,7 @@
 //返回	
 	quxioa(){this.$router.go(-1);},//返回上一页
      
-//其他职业证书  	  
+//其他职业证书
 	  handleRemove3(file, fileList) {//删除
 	    this.img_url_box.s3 = [];
 	    for(var i=0;i<fileList.length;i++){this.img_url_box.s3.push(fileList[i].response.data.image)}

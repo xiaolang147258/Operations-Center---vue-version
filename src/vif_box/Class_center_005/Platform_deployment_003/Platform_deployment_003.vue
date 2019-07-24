@@ -123,9 +123,9 @@
      export default {
 	  data(){
 	    return {
-			show:false,
+	      show:false,
 			
-			sh_val:'',
+		  sh_val:'',
 		  sh_zt_box:[],
 		  sh_zt_id:'',
 			
@@ -139,9 +139,7 @@
 		   masg_val:'',//搜索输入框数据
 		   
 		   tableData3:[],//列表数据
-		   
            multipleSelection: [],
-		   
 		   // 城市区域街道
 		   cs_box:[],
 		   qy_box:[],

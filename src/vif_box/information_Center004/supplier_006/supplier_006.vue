@@ -17,7 +17,7 @@
 			<div class='inp_a'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
 			
-			<el-button style='float:right;margin-right:20px;' @click='create_supplier("")' type="primary">添加供应商</el-button>
+			<el-button style='float:right;margin-right:20px;' @click='create_supplier("","")' type="primary">添加供应商</el-button>
 		</div>
 		
    <div style="width:100%;float: left;">
@@ -27,11 +27,11 @@
        <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
        <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
        <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="供应商" ></el-table-column>
+	   <el-table-column prop="name" class='tds' align='center' header-align='center'  label="供应商" ></el-table-column>
 	   
        <el-table-column  label="操作" align='center' header-align='center'>
 		   <template slot-scope="scope">
-			  <el-button style='margin-left:10px;' type="primary" plain>编辑</el-button>
+			  <el-button style='margin-left:10px;' @click='create_supplier(scope.row.supplier_id,scope.row)' type="primary" plain>编辑</el-button>
 	       </template>
 	   </el-table-column>
      </el-table>
@@ -40,7 +40,6 @@
 	<div style="float:right;margin-right:10px;">
        <el-pagination background @size-change="handleSizeChange"
        @current-change="handleCurrentChange"
-       
        :page-sizes="ye_s"
        :page-size="100"
        layout="total, sizes, prev, pager, next, jumper"
@@ -49,12 +48,11 @@
 	  </div>
      </div>
   </div>
-    
     <transition name="el-fade-in-linear">
        <div v-show="show" class="transition-box">
     			<transition name="el-zoom-in-top">
              <el-card v-show="show" class="transition-boxs">
-    				  
+    				 
     				 <p style="font-size:20px;font-weight:600;text-align:center;margin-bottom:30px;margin-top:10px;">添加 / 编辑供应商</p>  
     				 <div class="box_call">
     					 <div style="width:400px;float:right;height:100%;">
@@ -75,17 +73,17 @@
 					    <p>*供应商名称：</p>
 					 </div> 
 					 <div class="box_call">
-					    <div style="width:400px;float:right;height:100%;"><el-input style='width:385px' type='Number' placeholder="请输入11位数手机号" v-model="input_val[0]" clearable></el-input></div>
+					    <div style="width:400px;float:right;height:100%;"><el-input :disabled="shows" style='width:385px' type='Number' placeholder="请输入11位数手机号" v-model="input_val[1]" clearable></el-input></div>
 					    <p>*联系人号码：</p>
 					 </div> 
 					 <div class="box_call">
-					    <div style="width:400px;float:right;height:100%;"><el-input style='width:385px' placeholder="请输入" v-model="input_val[0]" clearable></el-input></div>
+					    <div style="width:400px;float:right;height:100%;"><el-input :disabled="shows" style='width:385px' placeholder="请输入" v-model="input_val[2]" clearable></el-input></div>
 					    <p>*登录密码：</p>
 					 </div> 
     				    
     				<div style="width:180px;height:40px;margin:35px auto;">
     					   <el-button @click='show=false' style='float:left;' type="info">取消</el-button>
-    					   <el-button style='float:right;' type="primary">提交</el-button>
+    					   <el-button @click='create_put' style='float:right;' type="primary">提交</el-button>
     				</div>
     			  </el-card>
           </transition>
@@ -101,6 +99,8 @@
      export default {
 	  data(){
 	    return {
+		   shows:false,
+			
 		   input_val:[],
 			
 		   show:false,
@@ -138,15 +138,78 @@
 		   jd_id2:'',
 		   
 		   loading:true,
+		   supplier_id:'',
+		   pages_in:1,
 	    }
 	  },
 		
 	methods:{
 		
-		create_supplier(i){//添加被点击
+		create_supplier(i,item){//添加被点击 
+		  this.supplier_id = i;
+		  if(this.supplier_id==''){//判断为添加 
+		     this.shows = false;
+			 this.cs_val2='';
+			 this.qy_val2='';
+			 this.jd_val2='';
+			 this.cs_id2='';
+			 this.qy_id2='';
+			 this.jd_id2='';
+			 this.cs_fn2();
+			 this.input_val=[];
+		  }else{//判断为编辑
+		      this.shows = true;
+			 this.cs_val2=item.city_name
+			 this.qy_val2=item.region_name;
+			 this.jd_val2=item.street_name;
+			 this.qy_id2=item.region_id;
+			 this.jd_id2=item.street_id;
+			 this.input_val[0] = item.name;
+			 this.input_val[1] = item.phone;
+			 this.input_val[2] = item.password;
+		  }
 		  this.show = true;
 		},
-
+        create_put(){
+			if(this.jd_id2){}else{this.$message({message:'请选择区域街道！',type:'warning'});return false}
+			if(this.input_val[0]){}else{this.$message({message:'请填写供应商名字！',type:'warning'});return false}
+			if(this.supplier_id==''){
+				if(this.input_val[1]){}else{this.$message({message:'请填写手机号码！',type:'warning'});return false}
+				if(this.input_val[2]){}else{this.$message({message:'请填写密码！',type:'warning'});return false}
+			}
+			let type = this.supplier_id==''?'post':'put';
+			let ids = this.supplier_id==''?'':'/'+this.supplier_id
+			this.$axios({method:type,url:store.state.url_data+'/api/suppliers'+ids,
+			  data:{
+				 city_id:localStorage.cs_id,
+				 region_id:this.qy_id2+'',
+				 street_id:this.jd_id2+'',
+				 city_name:this.cs_val2,
+				 region_name:this.qy_val2,
+				 street_name:this.jd_val2,
+				 name:this.input_val[0],//供应商名字
+				 account:this.input_val[1],//账号
+				 password:this.input_val[1],//密码  
+				 phone:this.input_val[2],//手机号码
+			  },
+			  headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+				  console.log(res.data)
+			     if(res.data.code==200){
+					 this.$message({message:'提交成功',type:'success'});
+					 this.show=false;
+					 this.git_act(this.pages_in);
+				  }else{
+					  let box=res.data.data;let vals = '';
+					  for (var index in box){vals=box[index].join(' ')}
+					  this.$alert(vals,'服务器返回!',{confirmButtonText:'确定',callback:action=>{}})
+				  }
+				  }).catch(error=> {
+					 this.$message({message:'提交失败！',type:'warning'});
+				  });
+		},
+		 
+		 
 //////////弹出框选择城市街道///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 		//城市数据			 
 		        cs_fn2(){
@@ -168,10 +231,10 @@
 				      ).then(res=>{
 				        if(res.data.code==200){
 				   		    this.qy_box2 = res.data.data;
-							this.qy_val2 = this.qy_box2[0].region_name;
-							console.log(this.qy_val2)
-							this.qy_id2 = this.qy_box[0].region_id;
-							this.jd_fn2();
+							// this.qy_val2 = this.qy_box2[0].region_name;
+							// console.log(this.qy_val2)
+							// this.qy_id2 = this.qy_box[0].region_id;
+							// this.jd_fn2();
 				   		}
 				      }).catch(error=> {});
 				},
@@ -265,18 +328,17 @@
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
 		this.git_act(val);
+		this.pages_in = val
       },
 	
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/audits',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/suppliers',
 			  params:{
-				audit_type:this.lx_id,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				audit_status:this.sh_zt_id,//这里只获取待审核的数据，审核中心需要修改
-				audit_name:this.masg_val,
+				name:this.masg_val,
 				page:pages
 			  },
 			  headers:{'Authorization':'Bearer '+localStorage.token}}

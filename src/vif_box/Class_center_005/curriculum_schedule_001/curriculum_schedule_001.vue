@@ -12,13 +12,10 @@
 			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="年级">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			<el-select class='tab_c' @change='nian_cl' style='width:100px;' v-model="nian_val" clearable placeholder="年级">
+			   <el-option v-for="(item,index) in nian_box" :key="index" :label="item" :value="index"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="班级">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
-			</el-select>
 			
 			<el-select class='tab_c' v-model="cs_val" style='width:110px;' placeholder="城市">
 			   <el-option v-for="(item,index) in cs_box" :key="index" :label="item.city_name" :value="item.city_id"></el-option>
@@ -33,33 +30,60 @@
 			<div class='inp_a' style='width:150px;'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
 			
-			<el-button style='float:right;' type="primary">导出excel</el-button>
+			<!-- <el-button style='float:right;' type="primary">导出excel</el-button> -->
 		</div>
 		
    <div style="width:100%;float: left;">
 	<el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%">
        
-	   <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
-       <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
-       <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
+	   <el-table-column prop="school.city_name" align='center' header-align='center' label="城市" ></el-table-column>
+       <el-table-column prop="school.region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
+       <el-table-column prop="school.street_name" align='center' header-align='center' label="街道" ></el-table-column>
 	   
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务年级" ></el-table-column>
-	   <el-table-column prop="city_name" align='center' header-align='center' label="服务类型" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="课程门类" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="street_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="平台课程名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="课班名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="city_name" align='center' header-align='center' label="上课时间" ></el-table-column>
-	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="总价格（课时单价x课时总数+材料费+教材费）" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="street_name" align='center' header-align='center' label="课程日期（开始/结束）" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="授课老师" ></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="报名人数" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="开班下限/开班上限" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="school_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="max_grade" align='center' header-align='center' label="服务年级" >
+		   <template slot-scope="scope">
+		   			{{scope.row.min_grade}}-{{scope.row.max_grade}}
+		   </template>
+	   </el-table-column>
+	   
+	   <el-table-column prop="arrange_mode" align='center' header-align='center' label="服务类型" show-overflow-tooltip>
+		    <template slot-scope="scope">{{scope.row.arrange_mode==1?'机构调配':(scope.row.arrange_mode==2?'学校调配':'平台调配')}}</template>
+	   </el-table-column>
+	   
+	   <el-table-column prop="course.category_name" class='tds' align='center' header-align='center'  label="课程门类" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="course_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="course.revised_name" class='tds' align='center' header-align='center'  label="平台课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="class_name" align='center' header-align='center' label="课班名称" show-overflow-tooltip></el-table-column>
+
+	   <el-table-column prop="time_format" align='center' header-align='center' label="上课时间" >
+		    <template slot-scope="scope">
+			   <span v-for="i in scope.row.class_timetable">{{i.timetable_format}}</span>
+		    </template>
+	   </el-table-column>
+	   
+	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="总价格（课时单价x课时总数+材料费+教材费）" show-overflow-tooltip>
+		   <template slot-scope="scope">
+		   			{{scope.row.hour_fee}}x{{scope.row.hours_total}}+{{scope.row.material_fee}}+{{scope.row.books_fee}}={{scope.row.price}}
+		   </template>
+	   </el-table-column>
+	   
+	   <el-table-column prop="time_format" align='center' header-align='center' label="课程日期（开始/结束）" show-overflow-tooltip></el-table-column>
+		   
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="授课老师" >
+		    <template slot-scope="scope">{{scope.row.teacher?scope.row.teacher.name:''}}</template>
+	   </el-table-column>
+	   
+	   <el-table-column prop="join_number" align='center' header-align='center' label="报名人数" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="开班下限/开班上限" show-overflow-tooltip>
+		    <template slot-scope="scope">
+		   			{{scope.row.min_students}}/{{scope.row.max_students}}
+		   </template>
+	   </el-table-column>
 	   
        <el-table-column  label="操作" align='center' header-align='center'>
 		   <template slot-scope="scope">
-			  <el-button @click='fen_shi("")' type="primary" plain>分配老师</el-button>
+			  <el-button @click='fen_shi(scope.row.class_id)' type="primary" plain>分配老师</el-button>
 	       </template>
 	   </el-table-column>
      </el-table>
@@ -79,24 +103,21 @@
   
     <transition name="el-fade-in-linear">
        <div v-show="show" class="transition-box">
-    			<transition name="el-zoom-in-top">
+    	   <transition name="el-zoom-in-top">
              <el-card v-show="show" class="transition-boxs">
     				  
     				 <p style="font-size:20px;font-weight:600;text-align:center;margin-bottom:30px;margin-top:10px;">分配老师</p>  
-    				 
     				 <div class="box_call">
     				    <div style="width:400px;float:right;height:100%;">
-							<el-select class='tab_c'  @change='lx_cl' style='width:250px;' v-model="lx_val" clearable placeholder="请选择老师">
-							   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
+							<el-select class='tab_c'  @change='therch_cl' style='width:250px;' v-model="therch_val" clearable placeholder="请选择老师">
+							   <el-option v-for="(item,index) in therch_box" :key="index" :label="item.name" :value="item.teacher_id"></el-option>
 							</el-select>
 							<el-button @click='create_there' type="primary">添加老师</el-button>
 						</div>
-    				   
     				 </div> 
-    				    
     				<div style="width:180px;height:40px;margin:35px auto;">
     					   <el-button @click='show=false' style='float:left;' type="info">取消</el-button>
-    					   <el-button style='float:right;' type="primary">确认</el-button>
+    					   <el-button @click='git_fen' style='float:right;' type="primary">确认</el-button>
     				</div>
     			  </el-card>
           </transition>
@@ -112,19 +133,24 @@
      export default {
 	  data(){
 	    return {
+		 
+		  nian_box:['1年级','2年级','3年级','4年级','5年级','6年级','7年级','8年级','9年级'],
+		  nian_id:'',
+		  nian_val:'',
+		  
 		  input_val:'',
 			
 		  show:false,
 			
 		  sh_val:'',
 		  sh_zt_box:[],
-		  sh_zt_id:'',
+		  sh_zt_id:'',//服务类型id
 			
 		   total_01:0,//分页-总条数
 		   ye_s:[15],
 		   
 		   lx_box:[],
-		   lx_id:'',//类型id
+		   lx_id:'',//课程类型id
 		   lx_val:'',
 		   
 		   masg_val:'',//搜索输入框数据
@@ -146,6 +172,14 @@
 		   qy_id:'',
 		   jd_id:'',
 		   loading:true,
+		   
+		   pages:1,
+		   
+		   therch_box:'',
+		   therch_val:'',
+		   therch_id:'',//老师id
+		   
+		   ke_id:'',
 	    }
 	  },
 		
@@ -153,41 +187,60 @@
 		create_there(){//添加老师按钮被点击
 		  this.show = false;
 		  this.$router.push({path:'/Teacher_management_003'});
-			
 		},
 		
 //分配老师被点击		
-		fen_shi(i){
+		fen_shi(id){
+			this.git_act_therch(id);
 			this.show=true;
 		},
 		
+		therch_cl(i){
+		   this.therch_id = i;
+		},
 		
-		//获取审核状态数据
+		git_fen(){
+			this.$axios({method:'put',url:store.state.url_data+'/api/coursePlanClasses/'+this.ke_id+'/teacher',
+			              data:{teacher_id:this.therch_id},headers:{'Authorization':'Bearer '+localStorage.token}} ).then(res=>{
+							console.log(res.data,'分配结果')
+						    if(res.data.code==200){
+								 this.$message({message:'分配成功',type:'success'});
+							     this.show=false;
+								 this.git_act(this.pages);
+							}
+			  }).catch(error=> {});
+		},
+		
+//获取教师列表
+		git_act_therch(id){
+			this.ke_id = id;
+			this.$axios({method:'get',url:store.state.url_data+'/api/coursePlanClasses/'+id+'/teacher',
+						  headers:{'Authorization':'Bearer '+localStorage.token}}
+						  ).then(res=>{
+							console.log(res.data,'教师列表')
+						    if(res.data.code==200){
+								this.therch_box = res.data.data;
+								this.loading_2 = false;
+							  }
+						  }).catch(error=> {});
+		},
+		
+//年级被点击		
+		nian_cl(i){
+			this.nian_id = i+1;
+			this.git_act(1)
+		},
+		
+		//获取服务类型数据
 		git_zt(){
-		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
+		   this.$axios({method:'get',url:store.state.url_data+'/api/courseArrangeMode',
 			  headers:{'Authorization':'Bearer '+localStorage.token}}
 			  ).then(res=>{
-				    console.log(res.data,'状态数据')
+				    console.log(res.data,'服务类型')
 			    if(res.data.code==200){
 					this.sh_zt_box = res.data.data;
 				  }
 			  }).catch(error=> {});
-		},
-		
-		//审核按钮被点击
-		audit_click(i,val){
-			console.log(i);
-			store.state.audit_id = i.audit_id;
-			store.state.audit_val = val;
-			
-			if(i.audit_type_name=='机构审核'){
-				this.$router.push({path:'/ji_audit_001'});
-			}else if(i.audit_type_name=='课程审核'){
-				this.$router.push({path:'/ke_audit_002'});
-			}else if(i.audit_type_name=='教师审核'){
-				this.$router.push({path:'/jiao_shi_audit_003'});
-			}
-			
 		},
 		
 		//城市区域街道函数
@@ -251,9 +304,9 @@
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
 		this.git_act(val);
+		this.pages = val;
       },
 	  lx_cl(i){
-	  		// console.log(i);
 	  		this.lx_id = i;
 			this.git_act(1)
 	  },
@@ -263,7 +316,7 @@
 	  },
 	//获取类型函数
 	  git_lx(){
-		  this.$axios({method:'get',url:store.state.url_data+'/api/auditTypes',headers:{'Authorization':'Bearer '+localStorage.token}}
+		  this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',headers:{'Authorization':'Bearer '+localStorage.token}}
 		     ).then(res=>{
 		        // console.log(res.data,'类型数据');
 		       if(res.data.code==200){
@@ -274,18 +327,17 @@
 	  
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/audits',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/coursePlanClasses',
 			  params:{
-				audit_type:this.lx_id,
+				page:pages,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				audit_status:this.sh_zt_id,//这里只获取待审核的数据，审核中心需要修改
-				audit_name:this.masg_val,
-				page:pages
-			  },
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-	  		     ).then(res=>{
+				grade:this.sh_zt_id,
+				category_id:this.lx_id,
+				arrange_mode:this.nian_id,
+				search:this.input_val
+			  },headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
 	  		        console.log(res.data,'数据');
 					this.loading = false;
 	  		       if(res.data.code==200){
@@ -300,6 +352,7 @@
 		this.cs_fn();
 		this.git_lx();
 		this.git_zt();
+		
 		this.git_act(1);
 	  }
 	};

@@ -23,16 +23,16 @@
 		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[1]" clearable></el-input>
 		  <p>*联系人:</p></div>
 		
-		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[1]" clearable></el-input>
+		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[2]" clearable></el-input>
 		  <p>*详细地址:</p></div>
 		
-		<div class="box_tall"><el-input type='Number' class='tab_c' placeholder="请输入" v-model="input[1]" clearable></el-input>
+		<div class="box_tall"><el-input type='Number' class='tab_c' placeholder="请输入" v-model="input[3]" clearable></el-input>
 		  <p>*手机号码:</p></div>
 		
-		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[1]" clearable></el-input>
+		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[4]" clearable></el-input>
 		  <p>*登录账号:</p></div>
 		
-		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[1]" clearable></el-input>
+		<div class="box_tall"><el-input type='text' class='tab_c' placeholder="请输入" v-model="input[5]" clearable></el-input>
 		  <p>*登录密码:</p></div>
 		
 		<div class="box_tall" style="height:auto;float:left;width:850px;padding-right:5px;">
@@ -55,34 +55,34 @@
 			  <div class="tab_c_c">
 				  
 			   <div style="float:left;height: 45px;">
-				 <el-time-picker format='HH:mm' is-range v-model='value_box[0]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+				 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[0]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[1]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[1]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			    <div style="float:left;height: 45px;">
-			   	  <el-time-picker format='HH:mm' is-range v-model='value_box[2]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	  <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[2]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[3]' style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[3]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[3]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[4]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[4]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[4]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[5]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[5]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[5]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			    <div v-show='value_box[6]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[6]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[6]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[7]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[7]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[7]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[8]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[8]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[8]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   <div v-show='value_box[9]'  style="float:left;height: 45px;">
-			   	 <el-time-picker format='HH:mm' is-range v-model='value_box[9]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
+			   	 <el-time-picker format='HH:mm' value-format='HH-mm' is-range v-model='value_box[9]' range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围"></el-time-picker>
 			   </div>
 			   
 			   <el-button @click='create_date' style='margin-left:10px;' type="primary" icon="el-icon-circle-plus">添加课时</el-button>
@@ -90,8 +90,6 @@
 		   </div><p>*课程时间设置:</p>
 		</div>
 	 
-	 
-	  
 <!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->	  
 	  <div style="width: 100%;height:40px;float: left;margin-top: 10px;">
 	  		    <div style="width: 210px;height: 100%;margin-left:350px;">
@@ -100,29 +98,22 @@
 	  			</div>
 	  </div>
 <!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->
-	  
-      </el-card>
+  </el-card>
  
 </div>
 </template>
 
 <script>
-	 import store from "../../../vuex/store.js";
-	 
+	   import store from "../../../vuex/store.js";
      export default {
-		 computed:{
-			 url_img(){return store.state.url_data+'/api/uploads'},
-			 headers_s(){return {'Authorization':'Bearer '+localStorage.token}},
-			 
-			 radios(){return this.radio},
-		 },
 		 data(){
 			 return{
-				 value4:[new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 23, 40)],//展示数据
+				 value4:[new Date(2016,10,7,8, 40), new Date(2016,10,7,23,40)],//展示数据
 				 value_box:[
-					 [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 23, 40)],
-				     [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 23, 40)],
-				     [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 23, 40)]
+					   ['06-30', '23-30'],
+				     ['06-30', '23-30'],
+				     ['06-30', '23-30']
+						 
 				 ],
 					   
 				checkedCities:[],//选中的标签数组
@@ -145,60 +136,111 @@
 			 }
 		 },
 	methods:{
-	create_date(){
-	    if(this.value_box.length>=10){return false};
-		var a = [];a[0] = new Date(2016, 9, 10, 8, 40);a[1] = new Date(2016, 9, 10, 23, 40)
+		
+	create_date(){//添加课时
+	  if(this.value_box.length>=10){return false};
+		var a = ['06-30','23-30'];
 		this.value_box.push(a);
 		console.log(this.value_box);
 	},	
-		
-    git_put_act(){//判断是否为编辑状态
-		if(sessionStorage.teacher_id==''){//增加状态
+	
+   git_put_act(){//判断是否为编辑状态
+		if(localStorage.school_id==''){//增加状态
 		    
 		}else{//编辑状态
-		
-		  this.bank_show=true//银行卡效验开关
-		  this.idcard_show=true//身份证效验开关
-		  this.$axios({method:'get',url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,
-		     headers:{'Authorization':'Bearer '+localStorage.token}}
+		  this.$axios({method:'get',url:store.state.url_data+'/api/schools/'+localStorage.school_id,headers:{'Authorization':'Bearer '+localStorage.token}}
 		     ).then(res=>{
 		  	   console.log(res.data.data,'编辑详情')
 		       if(res.data.code==200){
-				   
-			   }
+				       let datas = res.data.data.school;
+							 console.log(datas);
+							 this.input[0] = datas.name;
+							 this.qy_id2 = datas.region_id;
+							 this.jd_id2 = datas.street_id;
+							 this.cs_val2 = datas.city_name;
+							 this.qy_val2 = datas.region_name;
+							 this.jd_val2 = datas.street_name;
+							 this.input[2] = datas.address;
+							 this.input[1] = datas.contact_name;
+							 this.input[3] = datas.contact_phone;
+							 this.input[4] = datas.account;
+							 this.input[5] = datas.password;
+							 this.checkedCities = res.data.data.target_tags;
+							 this.checkedCities1 = res.data.data.school_tags;
+							 this.value_box = res.data.data.timetables;
+			     }
 		     }).catch(error=> {});
 		}
 	},
 //提交数据
 	git_active(){
+		if(this.input[0]){}else{ this.$message({message:'请填写学校名字！',type:'warning'});return false}
+	  if(this.qy_id2){}else{ this.$message({message:'请选择区域街道！',type:'warning'});return false}
+		if(this.input[1]){}else{ this.$message({message:'请填写联系人！',type:'warning'});return false}
+		if(this.input[2]){}else{ this.$message({message:'请填写地址！',type:'warning'});return false}
+		if(this.input[3]){}else{ this.$message({message:'请填写手机号！',type:'warning'});return false}
+	if(localStorage.school_id==''){
+		if(this.input[4]){}else{ this.$message({message:'请填写账号！',type:'warning'});return false}
+		if(this.input[5]){}else{ this.$message({message:'请填写密码！',type:'warning'});return false}
+	}
 		
-	// 	if(this.input[0]){}else{ this.$message({message:'请填写教师姓名！',type:'warning'});return false}
-	// 
-	// 	
-	// 	if(this.img_url_box.s6){}else{this.$message({message:'请上传职业照',type:'warning'});return false}
-	// 	let postData = {
-	// 		
-	// 	};
-	// 	let type = sessionStorage.teacher_id==''?'post':'put';
-	// 	this.$axios({method:type,url:store.state.url_data+'/api/teachers/'+sessionStorage.teacher_id,params:postData,
-	// 	     headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
-	// 	     console.log(res.data,'添加结果')
-	// 	     if(res.data.code==200){
-	// 			this.$message({message:'提交成功',type:'success'});
-	// 			this.$router.go(-1);
-	// 	    }else{
-	// 			let box=res.data.data;let vals = '';
-	// 			for (var index in box){vals=box[index].join(' ')}
-	// 			this.$alert(vals,'服务器返回!',{confirmButtonText:'确定',callback:action=>{}})}
-	// 		}).catch(error=> {this.$message.error('发生了错误！');});
+		if(this.checkedCities.length!=0){}else{ this.$message({message:'请选择办学特色！',type:'warning'});return false}
+		if(this.checkedCities1.length!=0){}else{ this.$message({message:'请选择育人目标！',type:'warning'});return false}
+		if(this.value_box[0]){}else{ this.$message({message:'请设置课程时间！',type:'warning'});return false}
+		let postData = {
+			    name:this.input[0],//学校名字
+					city_id:localStorage.cs_id,
+					region_id:this.qy_id2+'',
+					street_id:this.jd_id2+'',
+					
+					address:this.input[2],//地址
+					contact_name:this.input[1],//联系人
+					contact_phone:this.input[3],//联系方式 
+					intro:'学校简介',//学校简介
+					account:this.input[4],//账号
+					password:this.input[5],//密码
+					city_name:this.cs_val2,//城市名字
+					region_name:this.qy_val2,//区域名字
+					street_name:this.jd_val2,//街道名字
+		};
+		postData.target_tags = [];
+		for(var i=0;i<this.checkedCities.length;i++){
+			  postData.target_tags[i] = this.checkedCities[i];
+		};
+		postData.school_tags = [];
+		for(var i=0;i<this.checkedCities1.length;i++){
+			  postData.school_tags[i] = this.checkedCities1[i];
+		};
+		postData.timetables = [];
+		for(var i=0;i<this.value_box.length;i++){
+			if(this.value_box[i]){
+				postData.timetables[i] = this.value_box[i];
+			}
+		};
+		console.log(postData,'传递的数据');
+		
+		let type = localStorage.school_id==''?'post':'put';
+		let id = '';
+	  if(localStorage.school_id!=''){id = '/'+localStorage.school_id;}
+		
+		this.$axios({method:type,url:store.state.url_data+'/api/schools'+id,data:postData,
+		     headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
+		     console.log(res.data,'添加结果')
+		   if(res.data.code==200){
+				this.$message({message:'提交成功',type:'success'});
+				this.$router.go(-1);
+		    }else{
+				let box=res.data.data;let vals = '';
+				for (var index in box){vals=box[index].join(' ')}
+				this.$alert(vals,'服务器返回!',{confirmButtonText:'确定',callback:action=>{}})}
+			}).catch(error=> {this.$message.error('发生了错误！');});
 	},
 //返回	
 	quxioa(){this.$router.go(-1);},//返回上一页
      
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				 
 //城市数据			 
-        cs_fn2(){
+    cs_fn2(){
 		   this.$axios({method:'get',url:store.state.url_data+'/api/regions',params:{type:'city',id:440},headers:{'Authorization':'Bearer '+localStorage.token}}
 		      ).then(res=>{
 		        if(res.data.code==200){
@@ -206,7 +248,8 @@
 		   		  		if(localStorage.cs_id==res.data.data[i].city_id){
 		   		  			this.cs_box2 = [];this.cs_box2.push(res.data.data[i]);this.cs_val2 = res.data.data[i].city_name;
 		   		  		}
-		   		  };this.qy_fn2();//获取区域数据
+		   		  };
+						this.qy_fn2();//获取区域数据
 				    
 		   		}}).catch(error=> {});
 		},
@@ -217,9 +260,9 @@
 		      ).then(res=>{
 		        if(res.data.code==200){
 		   		    this.qy_box2 = res.data.data;
-					this.qy_val2 = this.qy_box2[0].region_name;
-					console.log(this.qy_val2)
-					this.qy_id2 = this.qy_box[0].region_id;
+					// this.qy_val2 = this.qy_box2[0].region_name;
+					// console.log(this.qy_val2)
+					// this.qy_id2 = this.qy_box[0].region_id;
 					// this.jd_fn2();
 		   		}
 		      }).catch(error=> {});
@@ -255,34 +298,34 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		
 //办学特色		
-		      handleCheckedCitiesChange(value) {//任意一项被点击
+		    handleCheckedCitiesChange(value) {//任意一项被点击
 		        let checkedCount = value.length;
 				this.checkAll = checkedCount === this.cities.length;
 				this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
 				console.log(this.checkedCities)
 		      },
 			  git_check(){//获取授课门类数据
-				this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',
+				this.$axios({method:'get',url:store.state.url_data+'/api/tags?type=2',
 				   headers:{'Authorization':'Bearer '+localStorage.token}}
 				   ).then(res=>{
-					 // console.log(res.data.data,'授课门类')
+					 console.log(res.data.data,'办学特色')
 				     if(res.data.code==200){
 							this.cities = res.data.data;
 						}
 				   }).catch(error=> {});
 			  },
 //育人目标		
-		            handleCheckedCitiesChange1(value) {//任意一项被点击
+		        handleCheckedCitiesChange1(value) {//任意一项被点击
 		              let checkedCount = value.length;
 					  this.checkAll = checkedCount === this.cities1.length;
 					  this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities1.length;
 		      		console.log(this.checkedCities1)
 		            },
 		      	  git_check1(){//获取授课门类数据
-		      		this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',
+		      		this.$axios({method:'get',url:store.state.url_data+'/api/tags?type=3',
 		      		   headers:{'Authorization':'Bearer '+localStorage.token}}
 		      		   ).then(res=>{
-		      			 // console.log(res.data.data,'授课门类')
+		      			 console.log(res.data.data,'育人目标')
 		      		     if(res.data.code==200){
 		      					this.cities1 = res.data.data;
 		      				}

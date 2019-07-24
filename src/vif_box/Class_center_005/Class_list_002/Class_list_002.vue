@@ -12,12 +12,8 @@
 			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="年级">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
-			</el-select>
-			
-			<el-select class='tab_c' @change='zt_cl' style='width:100px;' v-model="sh_val" clearable placeholder="班级">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			<el-select class='tab_c' @change='nian_cl' style='width:100px;' v-model="nian_val" clearable placeholder="年级">
+			   <el-option v-for="(item,index) in nian_box" :key="index" :label="item" :value="index"></el-option>
 			</el-select>
 			
 			<el-select class='tab_c' v-model="cs_val" style='width:110px;' placeholder="城市">
@@ -33,7 +29,7 @@
 			<div class='inp_a' style='width:150px;'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
 			
-			<el-button style='float:right;' type="primary">导出excel</el-button>
+			<!-- <el-button style='float:right;' type="primary">导出excel</el-button> -->
 		</div>
 		
    <div style="width:100%;float: left;">
@@ -54,7 +50,6 @@
 	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="教师号码" show-overflow-tooltip></el-table-column>
 	   <el-table-column prop="street_name" align='center' header-align='center' label="上课日期时间" show-overflow-tooltip></el-table-column>
 	   
-       
      </el-table>
   <div style="margin-top:20px;">
 <!-- 分页插件 :current-page="currentPage4" -->
@@ -70,8 +65,6 @@
      </div>
   </div>
   
-    
-  
   </el-card>
 </div>
 </template>
@@ -81,9 +74,11 @@
      export default {
 	  data(){
 	    return {
-		  input_val:'',
+			nian_box:['1年级','2年级','3年级','4年级','5年级','6年级','7年级','8年级','9年级'],
+			nian_id:'',
+			nian_val:'',
 			
-		 
+		  input_val:'',
 			
 		  sh_val:'',
 		  sh_zt_box:[],
@@ -114,15 +109,19 @@
 		   cs_id:'',
 		   qy_id:'',
 		   jd_id:'',
-		   loading:true,
+		   loading:false,
 	    }
 	  },
 		
 	methods:{
-		
-		//获取审核状态数据
+		//年级被点击		
+				nian_cl(i){
+					this.nian_id = i+1;
+					this.git_act(1)
+				},
+		//
 		git_zt(){
-		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
+		   this.$axios({method:'get',url:store.state.url_data+'/api/courseArrangeMode',
 			  headers:{'Authorization':'Bearer '+localStorage.token}}
 			  ).then(res=>{
 				    console.log(res.data,'状态数据')
@@ -130,22 +129,6 @@
 					this.sh_zt_box = res.data.data;
 				  }
 			  }).catch(error=> {});
-		},
-		
-		//审核按钮被点击
-		audit_click(i,val){
-			console.log(i);
-			store.state.audit_id = i.audit_id;
-			store.state.audit_val = val;
-			
-			if(i.audit_type_name=='机构审核'){
-				this.$router.push({path:'/ji_audit_001'});
-			}else if(i.audit_type_name=='课程审核'){
-				this.$router.push({path:'/ke_audit_002'});
-			}else if(i.audit_type_name=='教师审核'){
-				this.$router.push({path:'/jiao_shi_audit_003'});
-			}
-			
 		},
 		
 		//城市区域街道函数
@@ -221,7 +204,7 @@
 	  },
 	//获取类型函数
 	  git_lx(){
-		  this.$axios({method:'get',url:store.state.url_data+'/api/auditTypes',headers:{'Authorization':'Bearer '+localStorage.token}}
+		  this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',headers:{'Authorization':'Bearer '+localStorage.token}}
 		     ).then(res=>{
 		        // console.log(res.data,'类型数据');
 		       if(res.data.code==200){
@@ -232,25 +215,24 @@
 	  
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/audits',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCoursesStudents',
 			  params:{
-				audit_type:this.lx_id,
+				page:pages,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				audit_status:this.sh_zt_id,//这里只获取待审核的数据，审核中心需要修改
-				audit_name:this.masg_val,
-				page:pages
-			  },
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-	  		     ).then(res=>{
+				grade:this.sh_zt_id,
+				category_id:this.lx_id,
+				arrange_mode:this.nian_id,
+				search:this.input_val
+			  },headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
 	  		        console.log(res.data,'数据');
 					this.loading = false;
 	  		       if(res.data.code==200){
 					   this.tableData3 = res.data.data;
 					   this.total_01 = res.data.meta.total;
 	  			   }
-	  		  }).catch(error=> {});
+	  		  }).catch(error=>{});
 	  },
 	 
 	 },

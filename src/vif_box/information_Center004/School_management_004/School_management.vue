@@ -7,7 +7,8 @@
 			
 			
 			<el-select class='tab_c' @change='zt_cl' v-model="sh_val" clearable placeholder="请选择课程状态">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
+			   <el-option  :label="'开启'" :value="'开启'"></el-option>
+			   <el-option  :label="'关闭'" :value="'关闭'"></el-option>
 			</el-select>
 			
 			<el-select class='tab_c' v-model="cs_val" style='width:150px;' placeholder="请选择城市">
@@ -28,48 +29,53 @@
    <div style="width:100%;float: left;">
 	<el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%">
        <!-- <el-table-column type="selection" width="100" align='center' header-align='center'></el-table-column> -->
-       <el-table-column prop="created_at" align='center' header-align='center' label="学校名称"><template slot-scope="scope">{{ scope.row.created_at }}</template></el-table-column>
+       <el-table-column prop="created_at" align='center' header-align='center' label="学校名称"><template slot-scope="scope">{{ scope.row.name }}</template></el-table-column>
        
 	   
 	   <el-table-column prop="city_name" align='center' header-align='center' label="个性化课程" >
 		   <template slot-scope="scope">
-			     <el-button v-if='true' type="success">开启</el-button><el-button v-else type="danger">关闭</el-button>
+			     <el-button v-if='scope.row.is_course==1' @click='gun_bi("is_course",scope.row.school_id,0)' type="success">开启</el-button>
+				 <el-button @click='gun_bi("is_course",scope.row.school_id,1)' v-else type="danger">关闭</el-button>
 		   </template>
 	   </el-table-column>
 	   
 	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="学校一键排课" >
 		    <template slot-scope="scope">
-		   			     <el-button v-if='true' type="success">开启</el-button><el-button v-else type="danger">关闭</el-button>
+		   		<el-button v-if='scope.row.can_arrange==1' @click='gun_bi("can_arrange",scope.row.school_id,0)' type="success">开启</el-button>
+				<el-button v-else @click='gun_bi("can_arrange",scope.row.school_id,1)' type="danger">关闭</el-button>
 		   </template>
 	   </el-table-column>
 	   
 	   <el-table-column prop="street_name" align='center' header-align='center' label="普惠午托" >
 		    <template slot-scope="scope">
-		   			     <el-button v-if='false' type="success">开启</el-button><el-button v-else type="danger">关闭</el-button>
+		   		<el-button v-if='scope.row.is_noon==1' @click='gun_bi("is_noon",scope.row.school_id,0)' type="success">开启</el-button>
+				<el-button v-else @click='gun_bi("is_noon",scope.row.school_id,1)' type="danger">关闭</el-button>
 		   </template>
 	   </el-table-column>
 	   
 	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="营养餐" >
 		    <template slot-scope="scope">
-		   			     <el-button v-if='false' type="success">开启</el-button><el-button v-else type="danger">关闭</el-button>
+		   			     <el-button v-if='scope.row.is_food==1' @click='gun_bi("is_food",scope.row.school_id,0)' type="success">开启</el-button>
+						 <el-button v-else type="danger" @click='gun_bi("is_food",scope.row.school_id,1)'>关闭</el-button>
 		   </template>
 	   </el-table-column>
 	   
 	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="普惠晚托" >
 		   <template slot-scope="scope">
-		   			     <el-button v-if='false' type="success">开启</el-button><el-button v-else type="danger">关闭</el-button>
+		   			     <el-button v-if='scope.row.is_afternoon==1' @click='gun_bi("is_afternoon",scope.row.school_id,0)' type="success">开启</el-button>
+						 <el-button v-else @click='gun_bi("is_afternoon",scope.row.school_id,1)' type="danger">关闭</el-button>
 		   </template>
 	   </el-table-column>
 	   
 	   <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
        <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
        <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="联系人" ></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="手机号码" ></el-table-column>
+	   <el-table-column prop="contact_name" class='tds' align='center' header-align='center'  label="联系人" ></el-table-column>
+	   <el-table-column prop="contact_phone" align='center' header-align='center' label="手机号码" ></el-table-column>
 	   
        <el-table-column  label="操作" align='center' header-align='center'>
 		   <template slot-scope="scope">
-			  <el-button type="primary" plain>编辑</el-button>
+			  <el-button @click='add_xuexiao(scope.row.school_id)' type="primary" plain>编辑</el-button>
 	       </template>
 	   </el-table-column>
      </el-table>
@@ -95,7 +101,7 @@
      export default {
 	  data(){
 	    return {
-			sh_val:'',
+		  sh_val:'',
 		  sh_zt_box:[],
 		  sh_zt_id:'',
 			
@@ -125,23 +131,29 @@
 	  },
 		
 	methods:{
+		gun_bi(type,id,num){//关闭和开启按钮被点击
+		    let data = {}
+			if(type=='is_noon'){data.is_noon = num};
+			if(type=='is_afternoon'){data.is_afternoon = num};
+			if(type=='is_course'){data.is_course = num};
+			if(type=='can_arrange'){data.can_arrange = num};
+			if(type=='is_food'){data.is_food = num};
+			
+			this.$axios({method:'put',url:store.state.url_data+'/api/schools/'+id,data,headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+				   console.log(res.data)
+			     if(res.data.code==200){
+					    this.$message({message: '修改状态成功', type: 'success' });
+                        this.git_act(1);
+				 }
+			   }).catch(error=> {});
+		},
+		
 //添加学校		
 		add_xuexiao(i){
+			localStorage.school_id = i;
 			this.$router.push({path:'/add_School_management'});
 		},
-		
-		//获取审核状态数据
-		git_zt(){
-		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-			  ).then(res=>{
-				    console.log(res.data,'状态数据')
-			    if(res.data.code==200){
-					this.sh_zt_box = res.data.data;
-				  }
-			  }).catch(error=> {});
-		},
-		
 		
 		//城市区域街道函数
 		cs_fn(){//城市数据
@@ -205,27 +217,22 @@
         // console.log(`当前页: ${val}`);
 		this.git_act(val);
       },
-	  lx_cl(i){
-	  		// console.log(i);
-	  		this.lx_id = i;
-			this.git_act(1)
-	  },
-	  zt_cl(i){
-		  this.sh_zt_id = i;
+	 
+	  zt_cl(){
+		  // this.sh_zt_id = i;
 		  this.git_act(1)
 	  },
 	
 	  
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/audits',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/schools',
 			  params:{
-				audit_type:this.lx_id,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				audit_status:this.sh_zt_id,//这里只获取待审核的数据，审核中心需要修改
-				audit_name:this.masg_val,
+				is_course:this.sh_val=='关闭'?0:(this.sh_val=='开启'?1:''),
+				search:this.masg_val,
 				page:pages
 			  },
 			  headers:{'Authorization':'Bearer '+localStorage.token}}
@@ -243,7 +250,6 @@
 	  mounted(){
 		this.cs_fn();
 		
-		this.git_zt();
 		this.git_act(1);
 	  }
 	};

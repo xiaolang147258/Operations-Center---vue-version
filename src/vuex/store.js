@@ -6,8 +6,8 @@ const state = {
   count: 0,
   
   //全局接口域名
-  //  url_data:'http://operate-center.cieo.com.cn';http://47.112.138.229:7041
-   url_data:'http://operate-center.cieo.com.cn',
+   url_data:'http://operate.alamb.com',//http://47.112.138.229:7041
+   // url_data:'http://operate-center.cieo.com.cn',
    
    
    

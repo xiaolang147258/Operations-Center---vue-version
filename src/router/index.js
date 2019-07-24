@@ -150,6 +150,12 @@ export const constantRoutes = [
 			  name:'supplier_006',
 			  meta: { title: '供应商管理',affix: false }
 			},
+			{
+			  path: '/Tag_library_007',
+			  component: () => import('@/vif_box/information_Center004/Tag_library_007/Tag_library_007'),
+			  name:'Tag_library_007',
+			  meta: { title: '标签库管理',affix: false }
+			},
 	  ]
 	},
 	
