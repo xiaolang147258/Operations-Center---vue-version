@@ -4,16 +4,13 @@
 	   <el-card v-loading="loading" class="box-card"  style="padding:0;margin:20px;padding-bottom: 20px;">
 		<div style="width:100%;margin-bottom:10px;float: left;">
            
-			<el-select class='tab_c'  @change='lx_cl' style='width:150px;' v-model="lx_val" clearable placeholder="课程门类">
+			<el-select class='tab_c'  @change='lx_cl' style='width:150px;' v-model="lx_val" clearable placeholder="排课状态">
 			   <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
 			</el-select>
 			
-			<el-select class='tab_c' @change='zt_cl' style='width:150px;' v-model="sh_val" clearable placeholder="服务类型">
-			   <el-option v-for="(item,index) in sh_zt_box" :key="index" :label="item.name" :value="item.id"></el-option>
-			</el-select>
-			
-			<el-select class='tab_c' @change='nian_cl' style='width:100px;' v-model="nian_val" clearable placeholder="年级">
-			   <el-option v-for="(item,index) in nian_box" :key="index" :label="item" :value="index"></el-option>
+			<el-select class='tab_c' @change='zt_cl' style='width:150px;' v-model="sh_val" clearable placeholder="报课状态">
+			   <el-option :label="'关闭'" :value="'0'"></el-option>
+			   <el-option :label="'开启'" :value="'1'"></el-option>
 			</el-select>
 			
 			<el-select class='tab_c' v-model="cs_val" style='width:110px;' placeholder="城市">
@@ -29,30 +26,28 @@
 			<div class='inp_a' style='width:150px;'><el-input placeholder="请输入关键字" v-model="masg_val" clearable></el-input></div>
             <el-button @click='git_act(1)' class='tab_c' type="primary">搜索</el-button>
 			
-			<!-- <el-button style='float:right;' type="primary">导出excel</el-button> -->
+			<!-- <el-button style='float:right;' type="primary" >批量导入<i class="el-icon-upload el-icon--right"></i></el-button> -->
 		</div>
 		
    <div style="width:100%;float: left;">
 	<el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%">
        
-	   <el-table-column prop="school.city_name" align='center' header-align='center' label="城市" ></el-table-column>
-       <el-table-column prop="school.region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
-       <el-table-column prop="school.street_name" align='center' header-align='center' label="街道" ></el-table-column>
+	   <el-table-column prop="school_detail.city_name" align='center' header-align='center' label="城市" ></el-table-column>
+       <el-table-column prop="school_detail.region_name" class='tds' align='center' header-align='center'  label="区域" ></el-table-column>
+       <el-table-column prop="school_detail.street_name" align='center' header-align='center' label="街道" ></el-table-column>
 	   <el-table-column prop="school_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
 	   
-	   <el-table-column prop="classes.course_name" align='center' header-align='center' label="机构课程名称" ></el-table-column>
-	   <el-table-column prop="classes.course_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="target_tags" align='center' header-align='center' label="育人目标" ></el-table-column>
+	   <el-table-column prop="schools_tags" align='center' header-align='center' label="办学特色" show-overflow-tooltip></el-table-column>
 	   
-	   <el-table-column prop="region_name" class='tds' align='center' header-align='center'  label="年级班级" show-overflow-tooltip>
-		    <template slot-scope="scope">
-		   			{{scope.row.grade}}年{{scope.row.class}}班
-		   </template>
+	   <el-table-column prop="key_works" class='tds' align='center' header-align='center'  label="关键字" show-overflow-tooltip></el-table-column>
+		    
+	   <el-table-column prop="phase_name" align='center' header-align='center' label="排课状态" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="school_detail.can_arrange" class='tds' align='center' header-align='center'  label="报课状态" show-overflow-tooltip>
+		   <template slot-scope="scope">{{scope.row.school_detail.can_arrange==0?'关闭':'开启'}}</template>
 	   </el-table-column>
 	   
-	   <el-table-column prop="student_name" align='center' header-align='center' label="学生姓名" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="classes.category_name" class='tds' align='center' header-align='center'  label="课程门类" show-overflow-tooltip></el-table-column>
-	   
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务类型" show-overflow-tooltip>
+	   <!-- <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务类型" show-overflow-tooltip>
 		    <template slot-scope="scope">{{scope.row.source_type==1?'机构调配':(scope.row.source_type==2?'学校调配':'平台调配')}}</template>
 	   </el-table-column>
 	   
@@ -62,7 +57,7 @@
 		   <template slot-scope="scope">
 		      <span v-for="i in scope.row.timetable">{{i.timetable_format}}</span>
 		   </template>
-	   </el-table-column>
+	   </el-table-column> -->
 	   
      </el-table>
   <div style="margin-top:20px;">
@@ -88,9 +83,6 @@
      export default {
 	  data(){
 	    return {
-			nian_box:['1年级','2年级','3年级','4年级','5年级','6年级','7年级','8年级','9年级'],
-			nian_id:'',
-			nian_val:'',
 			
 		  input_val:'',
 			
@@ -128,23 +120,7 @@
 	  },
 		
 	methods:{
-		//年级被点击		
-				nian_cl(i){
-					this.nian_id = i+1;
-					this.git_act(1)
-				},
-		//
-		git_zt(){
-		   this.$axios({method:'get',url:store.state.url_data+'/api/courseArrangeMode',
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-			  ).then(res=>{
-				    console.log(res.data,'状态数据')
-			    if(res.data.code==200){
-					this.sh_zt_box = res.data.data;
-				  }
-			  }).catch(error=> {});
-		},
-		
+			
 		//城市区域街道函数
 		cs_fn(){//城市数据
 		   this.$axios({method:'get',url:store.state.url_data+'/api/regions',params:{type:'city',id:440},headers:{'Authorization':'Bearer '+localStorage.token}}
@@ -216,28 +192,28 @@
 		  this.sh_zt_id = i;
 		  this.git_act(1)
 	  },
-	//获取类型函数
+	//获取排课状态和报课状态
 	  git_lx(){
-		  this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',headers:{'Authorization':'Bearer '+localStorage.token}}
+		  this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCourses/dict',headers:{'Authorization':'Bearer '+localStorage.token}}
 		     ).then(res=>{
-		        // console.log(res.data,'类型数据');
+		        console.log(res.data,'排课状态和报课状态数据');
 		       if(res.data.code==200){
-				   this.lx_box = res.data.data;
+				  this.lx_box = res.data.data.status;
+				  
 			   }
 		     }).catch(error=> {});
 	  },
 	  
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCoursesStudents',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/coursePlans',
 			  params:{
 				page:pages,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				grade:this.sh_zt_id,
-				category_id:this.lx_id,
-				arrange_mode:this.nian_id,
+				status:this.lx_id,
+				can_arrange:this.sh_zt_id,
 				search:this.input_val
 			  },headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
 	  		        console.log(res.data,'数据');
@@ -253,7 +229,7 @@
 	  mounted(){
 		this.cs_fn();
 		this.git_lx();
-		this.git_zt();
+		
 		this.git_act(1);
 	  }
 	};

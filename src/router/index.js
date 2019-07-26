@@ -183,9 +183,30 @@ export const constantRoutes = [
 			  name:'Platform_deployment_003',
 			  meta: { title: '平台调配',affix: false }
 			},
-			
+			{
+			  path: '/One-click_scheduling_004',
+			  component: () => import('@/vif_box/Class_center_005/One-click_scheduling_004/One-click_scheduling_004'),
+			  name:'One-click_scheduling_004',
+			  meta: { title: '一键排课',affix: false }
+			},
 	  ]
 	},
+
+//普惠中心	
+	{
+	  path: '/Pratt_&_Whitney_Center_006',
+	  component: Layout,
+	  meta: { title: '普惠中心', icon: 'tree-table', affix: true },
+	  children: [
+	    {
+	      path: '/Pratt_&_Whitney_Management_001',
+	      component: () => import('@/vif_box/Pratt_&_Whitney_Center_006/Pratt_&_Whitney_Management_001/Pratt_&_Whitney_Management_001'),
+	      name:'Pratt_&_Whitney_Management_001',
+	      meta: { title: '普惠管理',affix: false }
+	    },
+	  ]
+	},
+	
 	
 	
 	

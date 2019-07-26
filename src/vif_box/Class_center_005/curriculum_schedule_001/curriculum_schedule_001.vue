@@ -200,6 +200,8 @@
 		},
 		
 		git_fen(){
+			if(this.therch_id){}else{this.$message({message: '请选择老师 ',type: 'warning' });return false;}
+			
 			this.$axios({method:'put',url:store.state.url_data+'/api/coursePlanClasses/'+this.ke_id+'/teacher',
 			              data:{teacher_id:this.therch_id},headers:{'Authorization':'Bearer '+localStorage.token}} ).then(res=>{
 							console.log(res.data,'分配结果')
@@ -207,8 +209,10 @@
 								 this.$message({message:'分配成功',type:'success'});
 							     this.show=false;
 								 this.git_act(this.pages);
+							}else{
+								 this.$message({message: '分配失败',type: 'warning' });
 							}
-			  }).catch(error=> {});
+			  }).catch(error=> {this.$message({message: '分配失败',type: 'warning' });});
 		},
 		
 //获取教师列表

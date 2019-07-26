@@ -27,22 +27,28 @@
        <!-- <el-table-column type="selection" width="100" align='center' header-align='center'></el-table-column> -->
        <!-- <el-table-column prop="created_at" align='center' header-align='center' label="提交日期时间"><template slot-scope="scope">{{ scope.row.created_at }}</template></el-table-column> -->
        
-	   <el-table-column prop="city_name" align='center' header-align='center' label="城市" ></el-table-column>
-       <el-table-column prop="region_name" class='tds' align='center' header-align='center' label="区域" ></el-table-column>
-       <el-table-column prop="street_name" align='center' header-align='center' label="街道" ></el-table-column>
+	   <el-table-column prop="course_plan.school_detail.city_name" align='center' header-align='center' label="城市" ></el-table-column>
+       <el-table-column prop="course_plan.school_detail.region_name" class='tds' align='center' header-align='center' label="区域" ></el-table-column>
+       <el-table-column prop="course_plan.school_detail.street_name" align='center' header-align='center' label="街道" ></el-table-column>
 	   
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务年级" ></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="服务类型" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="课程门类" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="平台课程名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
-	   <el-table-column prop="audit_status_name" align='center' header-align='center' label="服务机构" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="course_plan.school_name" class='tds' align='center' header-align='center'  label="学校名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="max_grade" align='center' header-align='center' label="服务年级" >
+		   <template slot-scope="scope">
+		   			{{scope.row.min_grade}}-{{scope.row.max_grade}}
+		   </template>
+	   </el-table-column>
+	   <el-table-column prop="audit_type_name" class='tds' align='center' header-align='center'  label="服务类型" show-overflow-tooltip>
+		    <template slot-scope="scope">{{scope.row.arrange_mode==1?'机构调配':(scope.row.arrange_mode==2?'学校调配':'平台调配')}}</template>
+	   </el-table-column>
+	   <el-table-column prop="category_name" align='center' header-align='center' label="课程门类" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="course.revised_name" class='tds' align='center' header-align='center'  label="平台课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="course_name" align='center' header-align='center' label="课程名称" show-overflow-tooltip></el-table-column>
+	   <el-table-column prop="institude_name" align='center' header-align='center' label="服务机构" show-overflow-tooltip></el-table-column>
 	   
        <el-table-column  label="操作" align='center' header-align='center'>
 		   <template slot-scope="scope">
-			  <el-button @click='tiao("")'  v-if='false' type="primary" plain>平台调配</el-button>
-			  <el-button @click='tiao("")' v-else type="success" plain>重新调配</el-button>
+			  <el-button @click='tiao(scope.row)' v-if='scope.row.source_id==""' type="primary" plain>平台调配</el-button>
+			  <el-button @click='tiao(scope.row)' v-else type="success" plain>重新调配</el-button>
 	       </template>
 	   </el-table-column>
 	   
@@ -68,38 +74,39 @@
    				 <p style="font-size:20px;font-weight:600;text-align:center;margin-bottom:30px;margin-top:10px;">平台调配</p>  
    				  
    				 <div class="box_call">
-   				    <div style="width:400px;float:right;height:100%;line-height:40px">西丽小学</div>
+   				    <div style="width:400px;float:right;height:100%;line-height:40px">{{inp_val[0]}}</div>
    				    <p>学校名称：</p>
    				 </div> 
    				<div class="box_call">
-   				   <div style="width:400px;float:right;height:100%;line-height:40px">西丽小学</div>
+   				   <div style="width:400px;float:right;height:100%;line-height:40px">{{inp_val[1]}}</div>
    				   <p>课程门类：</p>
    				</div> 
 				<div class="box_call">
-				   <div style="width:400px;float:right;height:100%;line-height:40px">西丽小学</div>
+				   <div style="width:400px;float:right;height:100%;line-height:40px">{{inp_val[2]}}</div>
 				   <p>服务年级：</p>
 				</div> 
 				<div class="box_call">
-				   <div style="width:400px;float:right;height:100%;line-height:40px">西丽小学</div>
+				   <div style="width:400px;float:right;height:100%;line-height:40px">{{inp_val[3]}}</div>
 				   <p>平台课程名称：</p>
 				</div> 
 				<div class="box_call">
-				   <div style="width:400px;float:right;height:100%;line-height:40px">西丽小学</div>
+				   <div style="width:400px;float:right;height:100%;line-height:40px">{{inp_val[4]}}</div>
 				   <p>学校地区：</p>
 				</div> 
 				
 				<div class="box_call">
 				   <div style="width:400px;float:right;height:100%;line-height:40px">
-					   <el-select style='width:385px;' @change='lx_cl' v-model="lx_val" clearable placeholder="请选择服务机构">
-					      <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
+					   <el-select style='width:385px;' @change='lx_cl_s' v-model="lx_val_s" clearable placeholder="请选择服务机构">
+					      <el-option v-for="(item,index) in lx_box_s" :key="index" :label="item.name" :value="item.institution_id"></el-option>
 					   </el-select>
 				   </div>
 				   <p>服务机构：</p>
 				</div> 
+				
 				<div class="box_call">
 				   <div style="width:400px;float:right;height:100%;line-height:40px">
-					   <el-select style='width:385px;' @change='lx_cl' v-model="lx_val" clearable placeholder="请选择课程名称">
-					      <el-option v-for="(item,index) in lx_box" :key="index" :label="item.name" :value="item.id"></el-option>
+					   <el-select style='width:385px;' @change='lx_cl_s2' v-model="lx_val_s2" clearable placeholder="请选择课程名称">
+					      <el-option v-for="(item,index) in lx_box_s2" :key="index" :label="item.name" :value="item.course_id"></el-option>
 					   </el-select>
 				   </div>
 				   <p>课程名称：</p>
@@ -107,7 +114,7 @@
 				
    				<div style="width:180px;height:40px;margin:35px auto;">
    					   <el-button @click='show=false' style='float:left;' type="info">取消</el-button>
-   					   <el-button style='float:right;' type="primary">提交</el-button>
+   					   <el-button @click='git_put_tiao' style='float:right;' type="primary">提交</el-button>
    				</div>
    			  </el-card>
          </transition>
@@ -123,11 +130,9 @@
      export default {
 	  data(){
 	    return {
+		  inp_val:[],
+		  
 	      show:false,
-			
-		  sh_val:'',
-		  sh_zt_box:[],
-		  sh_zt_id:'',
 			
 		   total_01:0,//分页-总条数
 		   ye_s:[15],
@@ -153,42 +158,89 @@
 		   qy_id:'',
 		   jd_id:'',
 		   loading:true,
+		   pages:1,
+		   
+		   item:'',
+		   
+		   lx_box_s:[],
+		   lx_id_s:'',//机构id
+		   lx_val_s:'',
+		   
+		   lx_box_s2:[],
+		   lx_id_s2:'',//课程id
+		   lx_val_s2:'',
 	    }
 	  },
 		
 	methods:{
+		
+//调配函数		
+		git_put_tiao(){
+			if(this.lx_id_s){}else{this.$message({message: '请选择服务机构',type: 'warning' });return false;}
+			if(this.lx_id_s2){}else{this.$message({message: '请选择课程名称 ',type: 'warning' });return false;}
+			this.$axios({method:'put',url:store.state.url_data+'/api/coursePlansCourses/'+this.item.id+'/smarty',
+			    data:{
+				     source_id:this.lx_id_s,
+					 course_id:this.lx_id_s2,
+					 
+					},
+			   headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+				  console.log(res.data,'调配结果')
+			     if(res.data.code==200){
+					     this.$message({message:'调配成功',type:'success'});
+						 this.show = false;
+						 this.git_act(this.pages);
+					}else{this.$message({message: '调配失败 ',type: 'warning' })}
+			   }).catch(error=> {this.$message({message: '调配失败 ',type: 'warning' })});
+		},
 //调配被点击		
 		tiao(i){
+		  this.item = i;
 		  this.show = true;
+		  this.inp_val[0] = i.course_plan.school_name;
+		  this.inp_val[1] = i.category_name;
+		  this.inp_val[2] = i.min_grade+'-'+i.max_grade;
+		  this.inp_val[3] = i.course.revised_name;
+		  this.inp_val[4] = i.course_plan.school_detail.city_name+'-'+i.course_plan.school_detail.region_name+'-'+i.course_plan.school_detail.street_name;
+		  
+		  if(this.item.source_id==''){
+			   this.lx_id_s='';this.lx_val_s='';
+			   this.lx_id_s2=''; this.lx_val_s2='';
+		  }else{
+			   this.lx_id_s=i.institude_id;
+			   this.lx_val_s=i.institude_name;
+			   this.lx_id_s2=i.course_id; 
+			   this.lx_val_s2=i.course_name;
+		  }
+		},
+		lx_cl_s(i){//机构类表被点击
+			this.lx_id_s = i;
+			this.git_course()
+		},
+		git_jigou(){//获取机构列表
+			this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCourses/institutions',params:{city_id:localStorage.cs_id},headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+				 console.log(res.data,'机构数据')
+			     if(res.data.code==200){
+					    this.lx_box_s = res.data.data;
+					}
+			   }).catch(error=> {});
+		},
+		lx_cl_s2(i){//课程被点击
+			this.lx_id_s2 = i
+		},
+		git_course(){//获取课程列表
+			this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCourses/courses?institution_id='+this.lx_id_s,
+			    headers:{'Authorization':'Bearer '+localStorage.token}}
+			   ).then(res=>{
+				 console.log(res.data,'课程数据')
+			     if(res.data.code==200){
+					    this.lx_box_s2 = res.data.data;
+					}
+			   }).catch(error=> {});
 		},
 		
-		//获取审核状态数据
-		git_zt(){
-		   this.$axios({method:'get',url:store.state.url_data+'/api/auditStatus',
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-			  ).then(res=>{
-				    console.log(res.data,'状态数据')
-			    if(res.data.code==200){
-					this.sh_zt_box = res.data.data;
-				  }
-			  }).catch(error=> {});
-		},
-		
-		//审核按钮被点击
-		audit_click(i,val){
-			console.log(i);
-			store.state.audit_id = i.audit_id;
-			store.state.audit_val = val;
-			
-			if(i.audit_type_name=='机构审核'){
-				this.$router.push({path:'/ji_audit_001'});
-			}else if(i.audit_type_name=='课程审核'){
-				this.$router.push({path:'/ke_audit_002'});
-			}else if(i.audit_type_name=='教师审核'){
-				this.$router.push({path:'/jiao_shi_audit_003'});
-			}
-			
-		},
 		
 		//城市区域街道函数
 		cs_fn(){//城市数据
@@ -251,21 +303,17 @@
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
 		this.git_act(val);
+		this.pages = val;
       },
 	  lx_cl(i){
-	  		// console.log(i);
 	  		this.lx_id = i;
 			this.git_act(1)
 	  },
-	  zt_cl(i){
-		  this.sh_zt_id = i;
-		  this.git_act(1)
-	  },
+	  
 	//获取类型函数
 	  git_lx(){
-		  this.$axios({method:'get',url:store.state.url_data+'/api/auditTypes',headers:{'Authorization':'Bearer '+localStorage.token}}
+		  this.$axios({method:'get',url:store.state.url_data+'/api/courseCategories',headers:{'Authorization':'Bearer '+localStorage.token}}
 		     ).then(res=>{
-		        // console.log(res.data,'类型数据');
 		       if(res.data.code==200){
 				   this.lx_box = res.data.data;
 			   }
@@ -274,18 +322,15 @@
 	  
 	//获取列表数据函数
 	  git_act(pages){
-	  		this.$axios({method:'get',url:store.state.url_data+'/api/audits',
+	  		this.$axios({method:'get',url:store.state.url_data+'/api/coursePlansCourses',
 			  params:{
-				audit_type:this.lx_id,
+				page:pages,
 				city_id:localStorage.cs_id,
 				region_id:this.qy_id,
 				street_id:this.jd_id,
-				audit_status:this.sh_zt_id,//这里只获取待审核的数据，审核中心需要修改
-				audit_name:this.masg_val,
-				page:pages
-			  },
-			  headers:{'Authorization':'Bearer '+localStorage.token}}
-	  		     ).then(res=>{
+				category_id:this.lx_id,
+				search:this.input_val
+			  },headers:{'Authorization':'Bearer '+localStorage.token}}).then(res=>{
 	  		        console.log(res.data,'数据');
 					this.loading = false;
 	  		       if(res.data.code==200){
@@ -299,7 +344,7 @@
 	  mounted(){
 		this.cs_fn();
 		this.git_lx();
-		this.git_zt();
+		this.git_jigou()
 		this.git_act(1);
 	  }
 	};
